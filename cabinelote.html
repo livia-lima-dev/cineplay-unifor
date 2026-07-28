@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cineplay Unifor - Reserva em Lote</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="layout-container">
+            <div class="content-wrapper">
+                <div class="layout-content-container">
+                    <header class="header">
+                        <div class="header-content">
+                            <p class="logo">Cineplay Unifor</p>
+                        </div>
+                    </header>
+                    
+                    <main class="main-content">
+                        <div class="batch-section">
+                            <div class="section-header">
+                                <div class="title-section">
+                                    <h1 class="title">Reserva em Lote</h1>
+                                    <p class="subtitle">Selecione as salas ou cabines que deseja reservar. Exclusivo para professores.</p>
+                                </div>
+                            </div>
+
+                            <!-- Informações da reserva atual -->
+                            <div class="reservation-summary" id="reservation-summary">
+                                <!-- Será preenchido via JavaScript -->
+                            </div>
+                            
+                            <div class="batch-list">
+                                <label class="batch-item">
+                                    <input class="batch-checkbox" type="checkbox">
+                                    <p class="batch-name">Auditório 1</p>
+                                </label>
+                                <label class="batch-item">
+                                    <input class="batch-checkbox" type="checkbox">
+                                    <p class="batch-name">Cabine 1</p>
+                                </label>
+                                <label class="batch-item">
+                                    <input class="batch-checkbox" type="checkbox">
+                                    <p class="batch-name">Cabine 2</p>
+                                </label>
+                                <label class="batch-item">
+                                    <input class="batch-checkbox" type="checkbox">
+                                    <p class="batch-name">Cabine 3</p>
+                                </label>
+                                <label class="batch-item">
+                                    <input class="batch-checkbox" type="checkbox">
+                                    <p class="batch-name">Cabine 4</p>
+                                </label>
+                                <label class="batch-item">
+                                    <input class="batch-checkbox" type="checkbox">
+                                    <p class="batch-name">Cabine 5</p>
+                                </label>
+                            </div>
+                            
+                            <div class="batch-actions">
+                                <button class="confirm-button" id="confirm-batch-btn" disabled>
+                                    <span class="button-text">Confirmar Reserva em Lote</span>
+                                </button>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/cabinelote.js"></script>
+</body>
+</html>

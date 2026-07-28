@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Termos de Uso - Cineplay Unifor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#064fbc",
+              "background-light": "#f5f7f8",
+              "background-dark": "#0f1723",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col bg-background-light dark:bg-background-dark group/design-root overflow-x-hidden">
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 p-4">
+<div class="flex w-full max-w-2xl flex-col rounded-xl bg-white dark:bg-slate-900 shadow-2xl">
+<header class="flex flex-col p-6">
+<!-- HeadlineText component -->
+<h3 class="text-slate-900 dark:text-white tracking-tight text-2xl font-bold leading-tight text-center">Termos de Uso</h3>
+</header>
+<main class="flex-1 overflow-y-auto px-6" style="max-height: 50vh;">
+<!-- BodyText component -->
+<p class="text-slate-700 dark:text-slate-300 text-base font-normal leading-relaxed pb-3 pt-1">
+                        Bem-vindo ao Cineplay Unifor. Ao utilizar nossos serviços, você concorda com estes termos. Leia-os com atenção.
+                    </p>
+<p class="text-slate-700 dark:text-slate-300 text-base font-normal leading-relaxed pb-3 pt-1">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                    </p>
+<p class="text-slate-700 dark:text-slate-300 text-base font-normal leading-relaxed pb-3 pt-1">
+                        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida. Duis ac tellus et risus vulputate vehicula. Donec lobortis risus a elit. Etiam tempor.
+                    </p>
+<p class="text-slate-700 dark:text-slate-300 text-base font-normal leading-relaxed pb-3 pt-1">
+                        Ut ullamcorper, ligula eu tempor congue, eros est euismod turpis, id tincidunt sapien risus a quam. Maecenas fermentum consequat mi. Donec fermentum. Pellentesque malesuada nulla a mi. Duis sapien sem, aliquet nec, commodo eget, consequat quis, neque. Aliquam faucibus, elit ut dictum aliquet, felis nisl adipiscing sapien, sed malesuada diam lacus eget erat. Cras mollis scelerisque nunc. Nullam arcu.
+                    </p>
+<p class="text-slate-700 dark:text-slate-300 text-base font-normal leading-relaxed pb-3 pt-1">
+                        Ao clicar em "Aceitar", você confirma que leu, compreendeu e concorda em ficar vinculado a todos os termos e condições deste acordo. Se você não concorda com estes termos, não utilize os serviços do Cineplay Unifor.
+                    </p>
+</main>
+<footer class="flex justify-end p-6">
+<!-- ButtonGroup component -->
+<div class="flex flex-1 gap-4 flex-wrap justify-end">
+<button onclick="voltarParaLogin()" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span class="truncate">Cancelar</span>
+</button>
+<button onclick="aceitarTermos()" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors">
+<span class="truncate">Aceitar</span>
+</button>
+</div>
+</footer>
+</div>
+</div>
+</div>
+
+<script>
+function voltarParaLogin() {
+    // Volta para a tela de login
+    window.location.href = 'login.html';
+}
+
+function aceitarTermos() {
+    // Marca o checkbox na tela de login e volta
+    // Usando localStorage para manter o estado entre páginas
+    localStorage.setItem('termosAceitos', 'true');
+    window.location.href = 'login.html';
+}
+
+// Quando a página carrega, verifica se precisa marcar o checkbox automaticamente
+document.addEventListener('DOMContentLoaded', function() {
+    if (localStorage.getItem('termosAceitos') === 'true') {
+        // Se os termos já foram aceitos anteriormente, podemos marcar o checkbox automaticamente
+        // quando o usuário voltar para o login
+    }
+});
+</script>
+</body></html>

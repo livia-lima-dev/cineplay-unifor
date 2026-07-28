@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cineplay Unifor - Catálogo de Mídias</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="layout-container">
+            <div class="content-wrapper">
+                <div class="layout-content-container">
+                    <header class="header">
+                        <div class="header-content">
+                            <p class="logo">Cineplay Unifor</p>
+                        </div>
+                    </header>
+                    
+                    <main class="main-content">
+                        <div class="catalog-section">
+                            <div class="section-header">
+                                <div class="title-section">
+                                    <h1 class="title">Mídias Disponíveis</h1>
+                                    <p class="subtitle">Navegue pelo catálogo e selecione uma mídia para reservar.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="filters-container">
+                                <div class="search-container">
+                                    <span class="material-symbols-outlined search-icon">search</span>
+                                    <input class="search-input" type="text" placeholder="Pesquisar por título...">
+                                </div>
+                                <div class="filter-container">
+                                    <select class="filter-select">
+                                        <option>Filtrar por tipo</option>
+                                        <option>Documentário</option>
+                                        <option>Filme</option>
+                                        <option>Curta-Metragem</option>
+                                        <option>Obra Acadêmica</option>
+                                        <option>Aula/Gravação</option>
+                                        <option>TV UNIFOR</option>
+                                        <option>Outros</option>
+                                    </select>
+                                    <span class="material-symbols-outlined filter-arrow">expand_more</span>
+                                </div>
+                            </div>
+                            
+                            <div class="media-list">
+                                </div>
+
+                            <div class="observations-container">
+                                <label for="equipment-observations" class="observations-label">Observações sobre a Reserva e Equipamentos Necessários (Opcional):</label>
+                                <textarea id="equipment-observations" class="observations-textarea" 
+                                          placeholder="Ex: Necessário microfone de lapela extra e projetor com cabo HDMI longo."
+                                          maxlength="500"></textarea>
+                            </div>
+                            </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/midia.js"></script>
+</body>
+</html>

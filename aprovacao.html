@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cineplay Unifor - Aprovação e Cancelamento de Reservas</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="layout-container">
+            <div class="content-wrapper">
+                <div class="layout-content-container">
+                    <header class="header">
+                        <div class="header-content">
+                            <p class="logo">Cineplay Unifor</p>
+                        </div>
+                    </header>
+                    
+                    <main class="main-content">
+                        <div class="approval-section">
+                            <div class="section-header">
+                                <div class="title-section">
+                                    <h1 class="title">Aprovação e Cancelamento de Reservas</h1>
+                                    <p class="subtitle">Gerencie as solicitações de reserva pendentes de alunos e professores. Aprove ou cancele conforme necessário.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="approval-container">
+                                <table class="approval-table">
+                                    <thead class="approval-header">
+                                        <tr>
+                                            <th class="approval-th">Nome</th>
+                                            <th class="approval-th">Matrícula</th>
+                                            <th class="approval-th">Data da Reserva</th>
+                                            <th class="approval-th">Sala</th>
+                                            <th class="approval-th">Filme</th>
+                                            <th class="approval-th actions-header">Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="approval-body">
+                                        <!-- As reservas serão carregadas dinamicamente via JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/aprovacao.js"></script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cineplay Unifor - Reserva de Data</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="layout-container">
+            <div class="content-wrapper">
+                <div class="layout-content-container">
+                    <header class="header">
+                        <div class="header-content">
+                            <p class="logo">Cineplay Unifor</p>
+                        </div>
+                    </header>
+                    
+                    <main class="main-content">
+                        <div class="calendar-section">
+                            <div class="section-header">
+                                <div class="title-section">
+                                    <h1 class="title">Reserve seu dia</h1>
+                                    <p class="subtitle">Selecione um dia disponível no calendário abaixo.</p>
+                                </div>
+                                <div class="user-info">
+                                    <span class="user-name">Olá, Usuário!</span>
+                                </div>
+                            </div>
+                            
+                            <div class="calendar-container">
+                                <div class="calendar">
+                                    <div class="calendar-header">
+                                        <button class="nav-button prev-month">
+                                            <span class="material-symbols-outlined">chevron_left</span>
+                                        </button>
+                                        <p class="month-year" id="current-month">Outubro 2024</p>
+                                        <button class="nav-button next-month">
+                                            <span class="material-symbols-outlined">chevron_right</span>
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="calendar-grid" id="calendar-grid">
+                                        <!-- Os dias serão gerados via JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <aside class="reservation-sidebar">
+                            <div class="sidebar-content">
+                                <h2 class="sidebar-title">Sua Reserva</h2>
+                                
+                                <div class="reservation-info">
+                                    <div class="info-item">
+                                        <p class="info-label">Data Selecionada:</p>
+                                        <p class="info-value" id="selected-date">Nenhuma data selecionada</p>
+                                    </div>
+                                    <div class="info-item">
+                                        <p class="info-label">Horário:</p>
+                                        <select class="time-select" id="time-select">
+                                            <option value="">Selecione um horário</option>
+                                            <option value="14:00">14:00</option>
+                                            <option value="16:30">16:30</option>
+                                            <option value="19:00">19:00</option>
+                                            <option value="21:30">21:30</option>
+                                        </select>
+                                    </div>
+                                    <div class="info-item">
+                                        <p class="info-label">Status:</p>
+                                        <div class="status">
+                                            <div class="status-indicator" id="status-indicator"></div>
+                                            <p class="info-value" id="status-text">Selecione uma data</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="sidebar-footer">
+                                    <div class="legend">
+                                        <h3 class="legend-title">Legenda</h3>
+                                        <div class="legend-items">
+                                            <div class="legend-item">
+                                                <div class="legend-indicator selected"></div>
+                                                <span class="legend-text">Selecionado</span>
+                                            </div>
+                                            <div class="legend-item">
+                                                <div class="legend-indicator available"></div>
+                                                <span class="legend-text">Disponível</span>
+                                            </div>
+                                            <div class="legend-item">
+                                                <div class="legend-indicator unavailable"></div>
+                                                <span class="legend-text">Indisponível</span>
+                                            </div>
+                                            <div class="legend-item">
+                                                <div class="legend-indicator past-day"></div>
+                                                <span class="legend-text">Data Passada</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <button class="confirm-button" id="confirm-btn" disabled>
+                                        <span class="button-text">Confirmar Reserva</span>
+                                    </button>
+                                    
+                                    <div class="reservation-summary" id="reservation-summary" style="display: none;">
+                                        <div class="summary-item">
+                                            <strong>Reserva Confirmada!</strong>
+                                            <p id="summary-details"></p>
+                                            <button class="secondary-button" id="new-reservation-btn">Nova Reserva</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/dia.js"></script>
+</body>
+</html>

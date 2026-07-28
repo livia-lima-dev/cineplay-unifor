@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cineplay Unifor - Reserva de Sala/Cabine</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="layout-container">
+            <div class="content-wrapper">
+                <div class="layout-content-container">
+                    <header class="header">
+                        <div class="header-content">
+                            <p class="logo">Cineplay Unifor</p>
+                        </div>
+                    </header>
+                    
+                    <main class="main-content">
+                        <div class="cabine-section">
+                            <div class="section-header">
+                                <div class="title-section">
+                                    <h1 class="title">Reserva de Sala/Cabine</h1>
+                                    <p class="subtitle">Selecione uma sala ou cabine disponível da lista abaixo.</p>
+                                </div>
+                            </div>
+
+                            <!-- Informações da reserva atual -->
+                            <div class="reservation-summary" id="reservation-summary">
+                                <!-- Será preenchido via JavaScript -->
+                            </div>
+                            
+                            <div class="cabine-list">
+                                <div class="cabine-item">
+                                    <p class="cabine-name">Auditório 1</p>
+                                    <button class="reserve-button">
+                                        <span class="button-text">Reservar</span>
+                                    </button>
+                                </div>
+                                <div class="cabine-item">
+                                    <p class="cabine-name">Auditório 2</p>
+                                    <button class="reserve-button">
+                                        <span class="button-text">Reservar</span>
+                                    </button>
+                                </div>
+                                <div class="cabine-item">
+                                    <p class="cabine-name">Cabine 1</p>
+                                    <button class="reserve-button">
+                                        <span class="button-text">Reservar</span>
+                                    </button>
+                                </div>
+                                <div class="cabine-item">
+                                    <p class="cabine-name">Cabine 2</p>
+                                    <button class="reserve-button">
+                                        <span class="button-text">Reservar</span>
+                                    </button>
+                                </div>
+                                <div class="cabine-item">
+                                    <p class="cabine-name">Sala de Reunião</p>
+                                    <button class="reserve-button">
+                                        <span class="button-text">Reservar</span>
+                                    </button>
+                                </div>
+                                <div class="cabine-item">
+                                    <p class="cabine-name">Estúdio de Gravação</p>
+                                    <button class="reserve-button">
+                                        <span class="button-text">Reservar</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/cabine.js"></script>
+</body>
+</html>

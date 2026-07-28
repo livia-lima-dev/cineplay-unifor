@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sincronizando Dados - Cineplay Unifor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#064EBA", // UNIFOR Blue as primary
+                        "background-light": "#f5f7f8", // Light gray background
+                        "background-dark": "#0f1723",
+                        "text-light": "#0d131c",
+                        "text-dark": "#e2e8f0",
+                        "border-light": "#ced9e9",
+                        "border-dark": "#334155"
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-light dark:text-text-dark">
+<div class="relative flex min-h-screen w-full flex-col items-center justify-center p-4">
+<!-- Main Content Card -->
+<div class="w-full max-w-lg rounded-xl bg-white dark:bg-[#1e293b] p-8 shadow-lg">
+<div class="flex flex-col items-center text-center">
+<!-- Loading State -->
+<div class="flex flex-col items-center w-full">
+<!-- Animated Spinner -->
+<div class="mb-5 h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" role="status">
+<span class="sr-only">Carregando...</span>
+</div>
+<h1 class="text-2xl font-bold tracking-tight text-text-light dark:text-white mb-2">Sincronizando seus dados...</h1>
+<p class="text-gray-500 dark:text-gray-400 mb-8">Aguarde um momento enquanto buscamos suas informações.</p>
+<!-- Data Synchronization Progress Bar -->
+<div class="w-full px-4 mb-8">
+<div class="h-2 rounded-full bg-border-light dark:bg-border-dark">
+<div class="h-2 rounded-full bg-primary" style="width: 75%;"></div>
+</div>
+</div>
+</div>
+<!-- Data Display Section (Shows after loading) -->
+<div class="w-full space-y-5 text-left">
+<label class="flex flex-col w-full">
+<p class="text-sm font-medium pb-2">Nome completo</p>
+<input class="form-input flex w-full cursor-not-allowed resize-none overflow-hidden rounded-lg border-none bg-background-light dark:bg-background-dark h-14 p-4 text-base placeholder:text-gray-500" readonly="" type="text" value="Ana de Sousa Oliveira"/>
+</label>
+<label class="flex flex-col w-full">
+<p class="text-sm font-medium pb-2">Matrícula / SIAPE</p>
+<input class="form-input flex w-full cursor-not-allowed resize-none overflow-hidden rounded-lg border-none bg-background-light dark:bg-background-dark h-14 p-4 text-base placeholder:text-gray-500" readonly="" type="text" value="2410589"/>
+</label>
+<label class="flex flex-col w-full">
+<p class="text-sm font-medium pb-2">E-mail institucional</p>
+<input class="form-input flex w-full cursor-not-allowed resize-none overflow-hidden rounded-lg border-none bg-background-light dark:bg-background-dark h-14 p-4 text-base placeholder:text-gray-500" readonly="" type="email" value="ana.oliveira@unifor.br"/>
+</label>
+</div>
+<p class="mt-6 text-xs text-gray-500 dark:text-gray-400">Essas informações foram importadas automaticamente do SSO Unifor.</p>
+<!-- Action Buttons -->
+<div class="mt-8 flex w-full flex-col gap-3">
+<button onclick="confirmarInformacoes()" class="flex h-12 w-full items-center justify-center rounded-lg bg-primary px-6 text-base font-bold text-white transition-colors hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-primary/50">
+                        Confirmar informações
+                    </button>
+<button onclick="voltarParaLogin()" class="flex h-12 w-full items-center justify-center rounded-lg px-6 text-base font-bold text-gray-600 dark:text-gray-300 transition-colors hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400/50">
+                        Voltar
+                    </button>
+</div>
+</div>
+</div>
+<!-- Error State Card (Hidden by default, shown on error) -->
+<!-- To display this, remove the 'hidden' class -->
+<div class="hidden w-full max-w-lg rounded-xl bg-white dark:bg-[#1e293b] p-8 shadow-lg mt-8">
+<div class="flex flex-col items-center text-center">
+<div class="flex h-14 w-14 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30 mb-4">
+<span class="material-symbols-outlined text-3xl text-red-600 dark:text-red-400" data-icon="error">error</span>
+</div>
+<h2 class="text-xl font-bold text-text-light dark:text-white">Falha na Sincronização</h2>
+<p class="mt-2 text-gray-600 dark:text-gray-400">Não foi possível importar seus dados institucionais. Por favor, tente novamente.</p>
+<button class="mt-6 flex h-12 w-full items-center justify-center rounded-lg bg-primary px-6 text-base font-bold text-white transition-colors hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-primary/50">
+                    Tentar Novamente
+                </button>
+</div>
+</div>
+</div>
+
+<script>
+function confirmarInformacoes() {
+    // Redireciona para a tela home
+    window.location.href = 'home.html';
+}
+
+function voltarParaLogin() {
+    window.location.href = 'login.html';
+}
+</script>
+</body></html>

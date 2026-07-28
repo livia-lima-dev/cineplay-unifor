@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Precisa de Ajuda? - Cineplay Unifor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;family=Inter:wght@400;500;600;700;800;900&amp;family=Roboto:wght@400;500;700&amp;family=Open+Sans:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#064fbc",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#0f1723",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"],
+                        "inter": ["Inter", "sans-serif"],
+                        "roboto": ["Roboto", "sans-serif"],
+                        "open-sans": ["Open Sans", "sans-serif"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24
+        }
+    </style>
+</head>
+<body class="font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col bg-background-light dark:bg-background-dark group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-4 sm:px-10 md:px-20 lg:px-40 flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col max-w-[960px] flex-1 bg-white dark:bg-slate-900/50 rounded-xl shadow-sm">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 px-6 sm:px-10 py-4">
+<div class="flex items-center gap-4 text-slate-900 dark:text-slate-100">
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-[-0.015em]">Cineplay Unifor</h2>
+</div>
+<button onclick="voltarParaLogin()" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-slate-50 text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors">
+<span class="truncate">Voltar para o Login</span>
+</button>
+</header>
+<main class="p-6 sm:p-10">
+<div class="flex flex-wrap justify-between gap-3 mb-8">
+<p class="text-slate-900 dark:text-slate-100 text-4xl font-black leading-tight tracking-[-0.033em] min-w-72">Precisa de Ajuda?</p>
+</div>
+<section class="mb-12" id="faq">
+<h2 class="text-slate-900 dark:text-slate-100 text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Perguntas Frequentes</h2>
+<div class="flex flex-col p-4 gap-3">
+<details class="flex flex-col rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-[15px] py-[7px] group" open="">
+<summary class="flex cursor-pointer items-center justify-between gap-6 py-2">
+<p class="text-slate-900 dark:text-slate-100 text-sm font-medium leading-normal">Como faço para recuperar minha senha?</p>
+<div class="text-slate-900 dark:text-slate-100 group-open:rotate-180 transition-transform"><span class="material-symbols-outlined">expand_more</span></div>
+</summary>
+<p class="text-slate-600 dark:text-slate-400 text-sm font-normal leading-normal pb-2">Para recuperar sua senha, acesse o portal de autoatendimento da Unifor e siga as instruções na seção 'Esqueci minha senha'. Você precisará fornecer seu número de matrícula e e-mail institucional.</p>
+</details>
+<details class="flex flex-col rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-[15px] py-[7px] group">
+<summary class="flex cursor-pointer items-center justify-between gap-6 py-2">
+<p class="text-slate-900 dark:text-slate-100 text-sm font-medium leading-normal">O que é o SSO da Unifor?</p>
+<div class="text-slate-900 dark:text-slate-100 group-open:rotate-180 transition-transform"><span class="material-symbols-outlined">expand_more</span></div>
+</summary>
+<p class="text-slate-600 dark:text-slate-400 text-sm font-normal leading-normal pb-2">O SSO (Single Sign-On) da Unifor é um serviço de autenticação que permite que você acesse múltiplos sistemas e aplicações da universidade com um único conjunto de credenciais (matrícula e senha).</p>
+</details>
+<details class="flex flex-col rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-[15px] py-[7px] group">
+<summary class="flex cursor-pointer items-center justify-between gap-6 py-2">
+<p class="text-slate-900 dark:text-slate-100 text-sm font-medium leading-normal">Meu usuário está bloqueado, o que fazer?</p>
+<div class="text-slate-900 dark:text-slate-100 group-open:rotate-180 transition-transform"><span class="material-symbols-outlined">expand_more</span></div>
+</summary>
+<p class="text-slate-600 dark:text-slate-400 text-sm font-normal leading-normal pb-2">Se seu usuário foi bloqueado por múltiplas tentativas de login malsucedidas, aguarde 30 minutos para que o sistema o desbloqueie automaticamente. Se o problema persistir, entre em contato com o suporte técnico.</p>
+</details>
+</div>
+</section>
+<section class="mb-6" id="contact">
+<h2 class="text-slate-900 dark:text-slate-100 text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Ainda precisa de ajuda?</h2>
+<p class="text-slate-600 dark:text-slate-400 text-sm px-4 mb-6">Se não encontrou a resposta que procurava, entre em contato conosco através dos canais abaixo ou preencha o formulário.</p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 mb-10">
+<div class="flex items-center gap-4 rounded-lg border border-slate-200 dark:border-slate-700 p-4 bg-slate-50 dark:bg-slate-800">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
+<span class="material-symbols-outlined">mail</span>
+</div>
+<div>
+<h3 class="font-bold text-slate-900 dark:text-slate-100">E-mail</h3>
+<p class="text-sm text-slate-600 dark:text-slate-400">suporte.ti@unifor.br</p>
+</div>
+</div>
+<div class="flex items-center gap-4 rounded-lg border border-slate-200 dark:border-slate-700 p-4 bg-slate-50 dark:bg-slate-800">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
+<span class="material-symbols-outlined">call</span>
+</div>
+<div>
+<h3 class="font-bold text-slate-900 dark:text-slate-100">Telefone</h3>
+<p class="text-sm text-slate-600 dark:text-slate-400">(85) 3477-3000</p>
+</div>
+</div>
+</div>
+<form class="space-y-4 px-4">
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div>
+<label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1" for="name">Nome</label>
+<input class="block w-full rounded-lg border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-200 shadow-sm focus:border-primary focus:ring-primary text-sm" id="name" name="name" placeholder="Seu nome completo" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1" for="email">E-mail</label>
+<input class="block w-full rounded-lg border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-200 shadow-sm focus:border-primary focus:ring-primary text-sm" id="email" name="email" placeholder="seu.email@unifor.br" type="email"/>
+</div>
+</div>
+<div>
+<label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1" for="subject">Assunto</label>
+<input class="block w-full rounded-lg border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-200 shadow-sm focus:border-primary focus:ring-primary text-sm" id="subject" name="subject" placeholder="Ex: Problema ao acessar o sistema" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1" for="message">Mensagem</label>
+<textarea class="block w-full rounded-lg border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-200 shadow-sm focus:border-primary focus:ring-primary text-sm" id="message" name="message" placeholder="Descreva seu problema ou dúvida em detalhes." rows="4"></textarea>
+</div>
+<div>
+<button class="w-full sm:w-auto flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-6 bg-primary text-slate-50 text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors" type="submit">
+<span class="truncate">Enviar Mensagem</span>
+</button>
+</div>
+</form>
+</section>
+</main>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+function voltarParaLogin() {
+    window.location.href = 'login.html';
+}
+</script>
+</body></html>

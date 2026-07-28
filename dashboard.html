@@ -1,0 +1,2523 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CINEPLAY UNIFOR - Sistema Integrado</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "institutional-primary": "#005AAB",
+                        "institutional-black": "#1A1A1A",
+                        "institutional-light-gray": "#F0F2F5",
+                        "status-pending": "#F59E0B",
+                        "status-maintenance": "#8B5CF6",
+                        "status-blocked": "#6B7280"
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .material-icons {
+            font-size: inherit;
+        }
+        .content-section {
+            display: none;
+        }
+        .active-section {
+            display: block;
+        }
+        .nav-active {
+            background-color: rgba(19, 91, 236, 0.1);
+            color: #135bec;
+            border-right: 3px solid #135bec;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .dark .modal-content {
+            background: #1f2937;
+        }
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: #10b981;
+            color: white;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+        }
+        .toast.error {
+            background: #ef4444;
+        }
+        .calendar-day {
+            min-height: 120px;
+            cursor: pointer;
+        }
+        .calendar-day:hover {
+            background-color: #f3f4f6;
+        }
+        .dark .calendar-day:hover {
+            background-color: #374151;
+        }
+        .calendar-event {
+            font-size: 0.75rem;
+            padding: 2px 4px;
+            margin-bottom: 2px;
+            border-radius: 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+    <!-- Toast para mensagens -->
+    <div id="toast" class="toast"></div>
+    
+    <!-- Modal genérico -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modal-title" class="text-lg font-bold text-gray-900 dark:text-white">Título do Modal</h3>
+                <button id="modal-close" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <div id="modal-body" class="mb-4">
+                Conteúdo do modal
+            </div>
+            <div class="flex justify-end space-x-2">
+                <button id="modal-cancel" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
+                    Cancelar
+                </button>
+                <button id="modal-confirm" class="px-4 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-blue-700">
+                    Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex h-screen">
+        <!-- Sidebar Navigation -->
+        <aside class="w-64 bg-white dark:bg-gray-900 shadow-md z-20">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-800">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-primary w-10 h-10 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                            <path clip-rule="evenodd" d="M24 6.34315L39.6569 22V36H30V27C30 25.3431 28.6569 24 27 24H21C19.3431 24 18 25.3431 18 27V36H8.34315V22L24 6.34315ZM24 0L0 24V42H21V30H27V42H48V24L24 0Z" fill="currentColor" fill-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h1 class="text-xl font-bold text-gray-900 dark:text-white">CINEPLAY UNIFOR</h1>
+                </div>
+            </div>
+            <nav class="mt-6">
+                <ul>
+                    <li>
+                        <a href="#" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 nav-active" data-section="dashboard">
+                            <span class="material-icons mr-3">dashboard</span>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800" 
+                        data-section="eventos">
+                            <span class="material-icons mr-3">event</span>
+                            <span>Eventos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" 
+                        class="flex items-center px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"
+                        data-section="controle-presenca">
+                            <span class="material-icons mr-3">how_to_reg</span>
+                            <span>Controle de Presença</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800" data-section="obras">
+                            <span class="material-icons mr-3">movie</span>
+                            <span>Obras</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"
+                        data-section="recomendacoes">
+                            <span class="material-icons mr-3">movie</span>
+                            <span>Recomendações</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800" data-section="exemplares">
+                            <span class="material-icons mr-3">library_books</span>
+                            <span>Exemplares</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800" data-section="salas">
+                            <span class="material-icons mr-3">meeting_room</span>
+                            <span>Salas e Cabines</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800" data-section="calendario">
+                            <span class="material-icons mr-3">calendar_today</span>
+                            <span>Calendário</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                        data-section="historico-usuario">
+                            <span class="material-icons mr-3">history</span>
+                            <span>Histórico do Usuário</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800" data-section="notificacoes">
+                            <span class="material-icons mr-3">notifications</span>
+                            <span>Notificações</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800" data-section="caixa-saida">
+                            <span class="material-icons mr-3">outbox</span>
+                            <span>Caixa de Saída</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800" data-section="relatorios">
+                            <span class="material-icons mr-3">assessment</span>
+                            <span>Relatórios</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800" data-section="banners">
+                            <span class="material-icons mr-3">campaign</span>
+                            <span>Gestão de Banners</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Bar -->
+            <header class="bg-white dark:bg-gray-900 shadow-sm z-10">
+                <div class="flex items-center justify-between p-4">
+                    <div class="flex items-center">
+                        <button id="menu-toggle" class="mr-4 text-gray-700 dark:text-gray-300">
+                            <span class="material-icons">menu</span>
+                        </button>
+                        <h2 id="page-title" class="text-lg font-bold text-gray-900 dark:text-white">Dashboard</h2>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button id="search-btn" class="text-gray-700 dark:text-gray-300">
+                            <span class="material-icons">search</span>
+                        </button>
+                        <button id="notifications-btn" class="text-gray-700 dark:text-gray-300 relative">
+                            <span class="material-icons">notifications</span>
+                            <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 text-xs flex items-center justify-center">3</span>
+                        </button>
+                        <img alt="Admin user avatar" class="w-10 h-10 rounded-full border-2 border-gray-200 dark:border-gray-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGeo1YeOz1x-c5ZPX14dgHIEYrg3F7iBzbkpq0Ppr65hUBKVWplA4OL2ZY41RTv8Wqj3ZSnaMSAmvrZ3djAIT_GNHL1b4DlkNDZJSjvGHXhld9a9eCo2u_bFhduEv3HTROz6dso7TduI9Wvr3SmyQjmrxAHu9UiR1E6H2vFt536XmPb5cvUiYrCOYxaRkq3UCjew7a47XlXzZ3QrXYcvWq4iquhkX6tntCmL9NaK8Z88mcaeWGrQVQprW2zEVtGPlh3IafEaSFABo">
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="flex-1 overflow-x-hidden overflow-y-auto p-4">
+                
+                <!-- Dashboard Section -->
+                <section id="dashboard" class="content-section active-section">
+                    <div class="grid grid-cols-2 gap-4">
+                        <a class="block bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer" data-action="reservas">
+                            <p class="text-sm text-slate-500 dark:text-slate-400">Reservas hoje</p>
+                            <p class="text-3xl font-bold text-slate-900 dark:text-white mt-1">12</p>
+                        </a>
+                        <a class="block bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer" data-action="ocupacao">
+                            <p class="text-sm text-slate-500 dark:text-slate-400">Ocupação %</p>
+                            <p class="text-3xl font-bold text-slate-900 dark:text-white mt-1">68%</p>
+                        </a>
+                        <a class="block bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer" data-action="exemplares">
+                            <p class="text-sm text-slate-500 dark:text-slate-400">Exemplares emprestados</p>
+                            <p class="text-3xl font-bold text-slate-900 dark:text-white mt-1">45</p>
+                        </a>
+                        <a class="block bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer" data-action="eventos">
+                            <p class="text-sm text-slate-500 dark:text-slate-400">Próximos eventos</p>
+                            <p class="text-3xl font-bold text-slate-900 dark:text-white mt-1">3</p>
+                        </a>
+                    </div>
+                    
+                    <section class="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm mt-6">
+                        <h2 class="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-4">Ocupação Semanal</h2>
+                        <div id="ocupacao-semanal" class="h-48 flex items-end justify-between space-x-2">
+                            <!-- Gráfico será gerado dinamicamente -->
+                        </div>
+                    </section>
+                    
+                    <section class="mt-6">
+                        <div class="flex justify-between items-center mb-3">
+                            <h2 class="text-lg font-semibold text-slate-800 dark:text-slate-100">Notificações</h2>
+                            <a class="text-sm font-medium text-primary hover:underline cursor-pointer" data-action="ver-todas-notificacoes">Ver todas</a>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="bg-white dark:bg-slate-800 p-3 rounded-lg flex items-center shadow-sm cursor-pointer" data-action="notificacao" data-id="1">
+                                <div class="w-10 h-10 bg-yellow-100 dark:bg-yellow-900/50 rounded-full flex items-center justify-center mr-4">
+                                    <span class="material-icons text-yellow-500 dark:text-yellow-400">report_problem</span>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-slate-700 dark:text-slate-200">Sala 3: Lâmpada queimada</p>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400">Pendente - Há 2 horas</p>
+                                </div>
+                                <span class="material-icons text-slate-400 dark:text-slate-500">chevron_right</span>
+                            </div>
+                            <div class="bg-white dark:bg-slate-800 p-3 rounded-lg flex items-center shadow-sm cursor-pointer" data-action="notificacao" data-id="2">
+                                <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center mr-4">
+                                    <span class="material-icons text-blue-500 dark:text-blue-400">bookmark_add</span>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-slate-700 dark:text-slate-200">Aprovar reserva de "Parasita"</p>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400">Pendente - Há 5 horas</p>
+                                </div>
+                                <span class="material-icons text-slate-400 dark:text-slate-500">chevron_right</span>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <section class="mt-6">
+                        <h2 class="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-3">Ações Rápidas</h2>
+                        <div class="grid grid-cols-3 gap-3 text-center">
+                            <a class="flex flex-col items-center justify-center p-3 bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors cursor-pointer" data-action="criar-obra">
+                                <span class="material-icons text-primary text-3xl mb-1">movie_creation</span>
+                                <span class="text-xs font-medium text-slate-700 dark:text-slate-200">Criar obra</span>
+                            </a>
+                            <a class="flex flex-col items-center justify-center p-3 bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors cursor-pointer" data-action="cadastrar-exemplar">
+                                <span class="material-icons text-primary text-3xl mb-1">library_add</span>
+                                <span class="text-xs font-medium text-slate-700 dark:text-slate-200">Cadastrar exemplar</span>
+                            </a>
+                            <a class="flex flex-col items-center justify-center p-3 bg-white dark:bg-slate-800 rounded-lg shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors cursor-pointer" data-action="adicionar-sala">
+                                <span class="material-icons text-primary text-3xl mb-1">add_to_queue</span>
+                                <span class="text-xs font-medium text-slate-700 dark:text-slate-200">Adicionar sala</span>
+                            </a>
+                        </div>
+                    </section>
+                </section>
+
+                <!-- Obras Section -->
+                <section id="obras" class="content-section">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div>
+                            <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Gerenciamento de Obras</h1>
+                            <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Adicione, edite e remova obras do acervo.</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button class="w-full sm:w-auto flex items-center justify-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" data-action="adicionar-obra">
+                                <span class="material-icons text-xl">add</span>
+                                <span>Adicionar Obra</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 space-y-6">
+                        <div class="relative">
+                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                <span class="material-icons text-slate-400">search</span>
+                            </div>
+                            <input class="block w-full rounded-md border-0 py-2.5 pl-10 text-slate-900 dark:text-white bg-white dark:bg-slate-800 ring-1 ring-inset ring-slate-300 dark:ring-slate-700 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6" placeholder="Pesquisar por título, diretor..." type="text" id="pesquisa-obras"/>
+                        </div>
+                        
+                        <div class="flow-root">
+                            <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                                <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                                    <div class="space-y-4" id="lista-obras">
+                                        <!-- As obras serão carregadas dinamicamente aqui -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Exemplares Section -->
+                <section id="exemplares" class="content-section">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Cadastro de Exemplares</h1>
+                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Gerencie os exemplares de cada obra.</p>
+                        </div>
+                        <button class="mt-4 sm:mt-0 flex items-center justify-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" data-action="novo-exemplar">
+                            <span class="material-icons text-base">add</span>
+                            Novo Exemplar
+                        </button>
+                    </div>
+                    
+                    <!-- Formulário de Cadastro (inicialmente oculto) -->
+                    <div id="form-exemplar-container" class="hidden">
+                        <div class="bg-white dark:bg-gray-900/50 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 mt-6">
+                            <form class="space-y-6" id="form-exemplar">
+                                <div>
+                                    <label class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200" for="obra-exemplar">Obra vinculada</label>
+                                    <div class="mt-2 relative">
+                                        <select class="block w-full rounded-md border-0 py-2.5 pl-3 pr-10 bg-white dark:bg-gray-800 text-gray-900 dark:text-white ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6" id="obra-exemplar" name="obra-exemplar" required>
+                                            <option value="">Selecione uma obra</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200" for="codigo">Código</label>
+                                    <div class="mt-2">
+                                        <input class="block w-full rounded-md border-0 py-2.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6" id="codigo" name="codigo" placeholder="ex: DVD00123" type="text" required/>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200" for="estado">Estado <span class="text-red-500">*</span></label>
+                                    <div class="mt-2">
+                                        <select class="block w-full rounded-md border-0 py-2.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white ring-1 ring-inset ring-gray-300 dark:ring-gray-700 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6" id="estado" name="estado" required>
+                                            <option value="">Selecione um estado</option>
+                                            <option value="Disponível">Disponível</option>
+                                            <option value="Emprestado">Emprestado</option>
+                                            <option value="Em manutenção">Em manutenção</option>
+                                            <option value="Perdido">Perdido</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200" for="local">Local</label>
+                                    <div class="mt-2">
+                                        <input class="block w-full rounded-md border-0 py-2.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6" id="local" name="local" placeholder="ex: Armário C, Prateleira 2" type="text"/>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-end gap-x-4 border-t border-gray-200 dark:border-gray-800 pt-6">
+                                    <button class="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-200" type="button" data-action="cancelar-exemplar">Cancelar</button>
+                                    <button class="rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" type="submit">Salvar exemplar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Lista de Exemplares -->
+                    <div class="bg-white dark:bg-gray-900/50 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 mt-6">
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Exemplares Cadastrados</h2>
+                        <div class="mt-4 space-y-4" id="lista-exemplares">
+                            <!-- Os exemplares serão carregados dinamicamente aqui -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Salas Section -->
+                <section id="salas" class="content-section">
+                    <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Gerenciamento de Salas e Cabines</h1>
+                        <button class="flex min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg bg-primary px-5 py-3 text-base font-bold leading-normal text-white transition-colors hover:bg-primary/90" data-action="cadastrar-sala">
+                            <span class="material-icons">add_circle</span>
+                            <span class="truncate">Cadastrar Nova Sala</span>
+                        </button>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white pt-8 pb-4">Salas e Cabines Cadastradas</h3>
+                    
+                    <div class="w-full overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm text-gray-600 dark:text-gray-400">
+                                <thead class="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-800 dark:text-gray-400">
+                                    <tr>
+                                        <th class="px-6 py-3" scope="col">Nome</th>
+                                        <th class="px-6 py-3" scope="col">Tipo</th>
+                                        <th class="px-6 py-3" scope="col">Capacidade</th>
+                                        <th class="px-6 py-3" scope="col">Recursos</th>
+                                        <th class="px-6 py-3" scope="col">Horário</th>
+                                        <th class="px-6 py-3 text-right" scope="col">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lista-salas">
+                                    <!-- As salas serão carregadas dinamicamente aqui -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Calendário Section -->
+                <section id="calendario" class="content-section">
+                    <h1 class="text-2xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white mb-4">Calendário Administrativo</h1>
+                    
+                    <div class="bg-white dark:bg-gray-900 rounded-lg shadow-sm p-4">
+                        <div class="flex flex-col gap-4">
+                            <div class="flex">
+                                <div class="flex h-10 flex-1 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 p-1">
+                                    <label class="flex h-full grow cursor-pointer items-center justify-center overflow-hidden rounded-lg px-2 text-sm font-medium leading-normal text-gray-500 has-[:checked]:bg-white has-[:checked]:text-gray-900 has-[:checked]:shadow-sm dark:text-gray-400 dark:has-[:checked]:bg-gray-700 dark:has-[:checked]:text-white">
+                                        <span class="truncate">Dia</span>
+                                        <input class="invisible w-0" name="calendar_view" type="radio" value="Dia"/>
+                                    </label>
+                                    <label class="flex h-full grow cursor-pointer items-center justify-center overflow-hidden rounded-lg px-2 text-sm font-medium leading-normal text-gray-500 has-[:checked]:bg-white has-[:checked]:text-gray-900 has-[:checked]:shadow-sm dark:text-gray-400 dark:has-[:checked]:bg-gray-700 dark:has-[:checked]:text-white">
+                                        <span class="truncate">Semana</span>
+                                        <input class="invisible w-0" name="calendar_view" type="radio" value="Semana"/>
+                                    </label>
+                                    <label class="flex h-full grow cursor-pointer items-center justify-center overflow-hidden rounded-lg px-2 text-sm font-medium leading-normal text-gray-500 has-[:checked]:bg-white has-[:checked]:text-gray-900 has-[:checked]:shadow-sm dark:text-gray-400 dark:has-[:checked]:bg-gray-700 dark:has-[:checked]:text-white">
+                                        <span class="truncate">Mês</span>
+                                        <input checked="" class="invisible w-0" name="calendar_view" type="radio" value="Mês"/>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-1">
+                                <button class="flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-700" data-action="mes-anterior">
+                                    <span class="material-icons text-gray-900 dark:text-white">chevron_left</span>
+                                </button>
+                                <p class="text-lg font-bold leading-tight text-gray-900 dark:text-white" id="mes-atual">Dezembro 2024</p>
+                                <button class="flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-700" data-action="mes-seguinte">
+                                    <span class="material-icons text-gray-900 dark:text-white">chevron_right</span>
+                                </button>
+                            </div>
+                            
+                            <div class="grid grid-cols-7 gap-1" id="calendario-dias">
+                                <!-- O calendário será gerado dinamicamente aqui -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Notificações Section -->
+                <section id="notificacoes" class="content-section">
+                    <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Templates de Notificação</h1>
+                    </div>
+                    <p class="mt-2 text-gray-600 dark:text-gray-400">Configure os modelos de mensagens para diferentes eventos do sistema.</p>
+                    
+                    <div class="mt-8 space-y-6">
+                        <div class="rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900">
+                            <div class="p-6">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">Confirmação de Agendamento</h3>
+                                    <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900 dark:text-green-300">Ativo</span>
+                                </div>
+                                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Enviada quando um agendamento é confirmado com sucesso.</p>
+                                <div class="mt-6">
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="confirmacao-assunto">Assunto (Email)</label>
+                                    <input class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-800 dark:text-white sm:text-sm" id="confirmacao-assunto" name="confirmacao-assunto" type="text" value="Seu agendamento para {{obra}} foi confirmado!"/>
+                                </div>
+                                <div class="mt-4">
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="confirmacao-corpo">Corpo da Mensagem</label>
+                                    <textarea class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-800 dark:text-white sm:text-sm" id="confirmacao-corpo" name="confirmacao-corpo" rows="4">Olá, {{nome}}! Seu agendamento para assistir a {{obra}} no dia {{data}} na {{sala}} foi confirmado com sucesso.</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 flex justify-end gap-3">
+                        <button class="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700" type="button" data-action="cancelar-configuracoes">Cancelar</button>
+                        <button class="rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-primary/90 focus:outline-none focus:ring-4 focus:ring-primary/30 dark:focus:ring-primary/80" type="button" data-action="salvar-configuracoes">Salvar Alterações</button>
+                    </div>
+                </section>
+
+                <!-- Caixa de Saída Section -->
+                <section id="caixa-saida" class="content-section">
+                    <div class="mb-6">
+                        <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Caixa de Saída</h1>
+                        <p class="mt-1 text-gray-600 dark:text-gray-400">Visualize as notificações enviadas aos usuários.</p>
+                    </div>
+                    
+                    <div class="rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900">
+                        <div class="border-b border-gray-200 p-4 dark:border-gray-700">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Notificações Enviadas</h3>
+                        </div>
+                        <ul class="divide-y divide-gray-200 dark:divide-gray-700" id="lista-notificacoes">
+                            <!-- As notificações serão carregadas dinamicamente aqui -->
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Relatórios Section -->
+                <section id="relatorios" class="content-section">
+                    <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <div class="flex-1">
+                            <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Relatórios</h1>
+                            <p class="mt-2 text-gray-600 dark:text-gray-400">Gere e visualize relatórios sobre o uso do CINEPLAY.</p>
+                        </div>
+                        <div class="flex w-full flex-shrink-0 items-center justify-start gap-2 sm:w-auto sm:justify-end">
+                            <button class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:focus:ring-gray-700" data-action="exportar-csv">
+                                <span class="material-icons text-base">description</span>
+                                CSV
+                            </button>
+                            <button class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:focus:ring-gray-700" data-action="exportar-pdf">
+                                <span class="material-icons text-base">picture_as_pdf</span>
+                                PDF
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900 sm:p-6">
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-white">Filtros do Relatório</h3>
+                        <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="report-type">Tipo de Relatório</label>
+                                <select class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-800 dark:text-white sm:text-sm" id="report-type" name="report-type">
+                                    <option selected value="reservas">Relatório de Reservas</option>
+                                    <option value="obras">Uso de Obras</option>
+                                    <option value="exemplares">Relatório de Exemplares</option>
+                                    <option value="salas">Ocupação de Salas</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="period">Período</label>
+                                <select class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-800 dark:text-white sm:text-sm" id="period" name="period">
+                                    <option value="7">Últimos 7 dias</option>
+                                    <option selected value="30">Últimos 30 dias</option>
+                                    <option value="este-mes">Este Mês</option>
+                                    <option value="mes-passado">Mês Passado</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="room">Sala</label>
+                                <select class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-800 dark:text-white sm:text-sm" id="room" name="room">
+                                    <option value="todas">Todas</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex w-full flex-col items-start gap-2 sm:flex-row sm:items-end sm:gap-4">
+                            <div class="w-full flex-1">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="course">Curso</label>
+                                <select class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-800 dark:text-white sm:text-sm" id="course" name="course">
+                                    <option value="todos">Todos</option>
+                                    <option value="Direito">Direito</option>
+                                    <option value="Medicina">Medicina</option>
+                                    <option value="Psicologia">Psicologia</option>
+                                </select>
+                            </div>
+                            <button class="w-full rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-primary/90 focus:outline-none focus:ring-4 focus:ring-primary/30 dark:focus:ring-primary/80 sm:w-auto" data-action="gerar-relatorio">Gerar Relatório</button>
+                        </div>
+                    </div>
+
+                    <!-- Resultado do Relatório -->
+                    <div id="resultado-relatorio" class="mt-8 hidden">
+                        <div class="rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900">
+                            <div class="p-6">
+                                <h3 class="text-lg font-medium text-gray-900 dark:text-white" id="titulo-relatorio">Relatório</h3>
+                                <div class="mt-4" id="conteudo-relatorio">
+                                    <!-- Conteúdo do relatório será gerado aqui -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Banners Section -->
+                <section id="banners" class="content-section">
+                    <div class="flex items-center justify-between">
+                        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Gestão de Banners</h1>
+                        <button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em]" data-action="novo-banner">
+                            <span class="material-icons text-base">add</span>
+                            <span class="truncate">Novo Banner</span>
+                        </button>
+                    </div>
+                    
+                    <div class="mt-6 space-y-4" id="lista-banners">
+                        <!-- Os banners serão carregados dinamicamente aqui -->
+                    </div>
+                </section>
+
+                <!-- Nova Tela: Eventos -->
+                <section id="eventos" class="content-section">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                        <div>
+                            <h1 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Eventos</h1>
+                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Sessões e eventos audiovisuais disponíveis.</p>
+                        </div>
+                        <button class="flex items-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary/90" 
+                                data-action="novo-evento">
+                            <span class="material-icons text-base">add</span>
+                            Novo Evento
+                        </button>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Sessões Disponíveis</h2>
+                        <div id="lista-eventos" class="space-y-4">
+                            <!-- Preenchido dinamicamente -->
+                        </div>
+                    </div>
+                </section>
+                <section id="historico-usuario" class="content-section">
+                    <div class="mb-6">
+                        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Histórico de Participação</h1>
+                        <p class="text-gray-600 dark:text-gray-400">
+                            Veja todos os eventos em que o usuário participou no passado.
+                        </p>
+                    </div>
+
+                    <div id="lista-historico-usuario" class="space-y-4"></div>
+                </section>
+                <section id="recomendacoes" class="content-section">
+                    <div class="mb-6">
+                        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Recomendações de Filmes</h1>
+                        <p class="text-gray-600 dark:text-gray-400">
+                            Sugestões de filmes especialmente selecionadas para você.
+                        </p>
+                    </div>
+
+                    <div id="lista-recomendacoes" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                </section>
+                <section id="controle-presenca" class="content-section">
+                    <div class="mb-6">
+                        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Controle de Presença</h1>
+                        <p class="text-gray-600 dark:text-gray-400">
+                            Veja todos os inscritos para cada evento e seus status de presença.
+                        </p>
+                    </div>
+
+                    <div id="lista-controle-presenca" class="space-y-4"></div>
+                </section>
+
+
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Dados de exemplo para simular o sistema
+        let dadosSistema = {
+            usuarioAtual: {
+                nome: "John Doe",
+                email: "john@example.com"
+            },
+            obras: [
+                { id: 1, titulo: "Parasita", diretor: "Bong Joon Ho", ano: 2019, generos: ["Suspense", "Drama"], exemplares: 5 },
+                { id: 2, titulo: "A Chegada", diretor: "Denis Villeneuve", ano: 2016, generos: ["Ficção Científica"], exemplares: 3 },
+                { id: 3, titulo: "O Grande Hotel Budapeste", diretor: "Wes Anderson", ano: 2014, generos: ["Comédia", "Drama"], exemplares: 8 }
+            ],
+            exemplares: [
+                { id: 1, obraId: 1, codigo: "DVD00123", estado: "Disponível", local: "Estante A1", ultimaMov: "20/07/2023" },
+                { id: 2, obraId: 1, codigo: "DVD00124", estado: "Emprestado", local: "Empréstimo", ultimaMov: "18/07/2023" },
+                { id: 3, obraId: 2, codigo: "DVD00201", estado: "Disponível", local: "Estante B2", ultimaMov: "15/07/2023" }
+            ],
+            salas: [
+                { id: 1, nome: "Sala 01", tipo: "Sala", capacidade: 150, recursos: "4K, Dolby Atmos, Acessibilidade", horario: "08:00 - 22:00" },
+                { id: 2, nome: "Sala 02 - VIP", tipo: "Sala", capacidade: 50, recursos: "4K, Dolby Atmos, Poltronas Reclináveis", horario: "10:00 - 23:00" },
+                { id: 3, nome: "Cabine de Edição A", tipo: "Cabine", capacidade: 4, recursos: "Software de Edição, Tratamento Acústico", horario: "09:00 - 18:00" }
+            ],
+            banners: [
+                { id: 1, titulo: "Promoção de Outubro", tipo: "Carrossel", periodo: "01/10 - 31/10/2024", prioridade: 1, status: "ativo" },
+                { id: 2, titulo: "Estreia da Semana", tipo: "Destaque Home", periodo: "15/09 - 22/09/2024", prioridade: 2, status: "ativo" },
+                { id: 3, titulo: "Festival de Cinema Clássico", tipo: "Carrossel", periodo: "01/08 - 31/08/2024", prioridade: 3, status: "inativo" }
+            ],
+            notificacoes: [
+                { id: 1, titulo: "Lançamento: 'Duna: Parte Dois'", destinatario: "Todos os usuários", data: "20 de Março de 2024, 10:30", tipo: "anuncio" },
+                { id: 2, titulo: "Confirmação de Reserva: Sala VIP", destinatario: "maria.silva@unifor.br", data: "19 de Março de 2024, 17:45", tipo: "confirmacao" },
+                { id: 3, titulo: "Lembrete: Sessão 'Oppenheimer'", destinatario: "joao.santos@unifor.br", data: "18 de Março de 2024, 14:00", tipo: "lembrete" },
+                { id: 4, titulo: "Cancelamento: Sessão das 22h", destinatario: "Grupo 'Noite'", data: "17 de Março de 2024, 09:12", tipo: "cancelamento" }
+            ],
+            reservas: [
+                { id: 1, salaId: 1, obraId: 1, data: "2024-12-05", horarioInicio: "14:00", horarioFim: "16:00", curso: "Direito" },
+                { id: 2, salaId: 2, obraId: 2, data: "2024-12-10", horarioInicio: "19:00", horarioFim: "21:00", curso: "Medicina" },
+                { id: 3, salaId: 1, obraId: 3, data: "2024-12-15", horarioInicio: "10:00", horarioFim: "12:00", curso: "Psicologia" }
+            ],
+            eventos: [
+                { id: 1, nome: "Festival de Curtas 2024", data: "2024-12-20", horario: "18:30", obraId: 1},
+                { id: 2, nome: "Sessão Especial: Cinema Nacional", data: "2024-12-22", horario: "14:00", obraId: 2},
+                { id: 3, nome: "Mostra Internacional de Documentários", data: "2025-01-10", horario: "09:00", obraId: 3},
+                { id: 4, nome: "Mostra de Cinema Independente", data: "2025-03-3", horario: "09:00", obraId: 3},
+                { id: 5, nome: "Festival Documentários Urbanos", data: "2024-09-21", horario: "18:00", obraId: 2},
+                { id: 6, nome: "Semana de Curtas Brasileiros", data: "2024-06-10", horario: "13:00", obraId: 1},
+            ],
+            inscricoes: {
+                // eventoId: [ { nome, email } ]
+                4: [
+                    { nome: "John Doe", email: "john@example.com" },
+                    { nome: "Ricardo Lima", email: "ricardo@example.com" }
+                ],
+
+                5: [
+                    { nome: "Marina Torres", email: "marina@example.com" },
+                    { nome: "John Doe", email: "john@example.com" },
+                    { nome: "Julia Martins", email: "julia@example.com" }
+                ],
+
+                6: [
+                    { nome: "Carlos Henrique", email: "carlos@example.com" },
+                    { nome: "John Doe", email: "john@example.com" }
+                ]
+            },
+            presencas: {
+                4: [
+                    { nome: "John Doe", presente: true },
+                    { nome: "Ricardo Lima", presente: false }
+                ],
+
+                5: [
+                    { nome: "Marina Torres", presente: true },
+                    { nome: "John Doe", presente: false },
+                    { nome: "Julia Martins", presente: true }
+                ],
+
+                6: [
+                    { nome: "Carlos Henrique", presente: true },
+                    { nome: "John Doe", presente: true }
+                ]
+            },
+        };
+
+        // Elementos da interface
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalBody = document.getElementById('modal-body');
+        const modalClose = document.getElementById('modal-close');
+        const modalCancel = document.getElementById('modal-cancel');
+        const modalConfirm = document.getElementById('modal-confirm');
+        const toast = document.getElementById('toast');
+
+        // Estado da aplicação
+        let itemSelecionado = null;
+        let acaoSelecionada = null;
+        let mesAtual = 11; // Dezembro (0-indexed)
+        let anoAtual = 2024;
+
+        // Funções de utilidade
+        function mostrarToast(mensagem, tipo = 'sucesso') {
+            toast.textContent = mensagem;
+            toast.className = `toast ${tipo === 'erro' ? 'error' : ''}`;
+            toast.style.display = 'block';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        function mostrarModal(titulo, conteudo, onConfirm) {
+            modalTitle.textContent = titulo;
+            modalBody.innerHTML = conteudo;
+            modal.classList.add('active');
+            
+            modalConfirm.onclick = onConfirm;
+        }
+
+        function fecharModal() {
+            modal.classList.remove('active');
+            itemSelecionado = null;
+            acaoSelecionada = null;
+        }
+
+        // Funções para renderizar dados
+        function renderizarObras() {
+            const container = document.getElementById('lista-obras');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            dadosSistema.obras.forEach(obra => {
+                const generosHTML = obra.generos.map(genero => 
+                    `<span class="inline-flex items-center rounded-md bg-blue-50 dark:bg-blue-900/50 px-2 py-1 text-xs font-medium text-blue-700 dark:text-blue-300 ring-1 ring-inset ring-blue-700/10 dark:ring-blue-300/20">${genero}</span>`
+                ).join('');
+                
+                const obraElement = document.createElement('div');
+                obraElement.className = 'bg-white dark:bg-slate-800/50 rounded-lg shadow-sm ring-1 ring-slate-900/5 dark:ring-white/10';
+                obraElement.innerHTML = `
+                    <div class="p-4">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <p class="font-semibold text-slate-900 dark:text-white">${obra.titulo}</p>
+                                <p class="text-sm text-slate-500 dark:text-slate-400">${obra.diretor} - ${obra.ano}</p>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <button class="p-2 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700" data-action="editar-obra" data-id="${obra.id}">
+                                    <span class="material-icons text-xl">edit</span>
+                                </button>
+                                <button class="p-2 rounded-full text-red-500 hover:bg-red-500/10" data-action="excluir-obra" data-id="${obra.id}">
+                                    <span class="material-icons text-xl">delete</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            ${generosHTML}
+                        </div>
+                    </div>
+                    <div class="border-t border-slate-200 dark:border-slate-700/50 p-4 flex justify-between text-sm">
+                        <span class="text-slate-500 dark:text-slate-400">Nº Exemplares: <span class="font-medium text-slate-700 dark:text-slate-300">${obra.exemplares}</span></span>
+                        <a class="font-semibold text-primary hover:underline cursor-pointer" data-action="detalhes-obra" data-id="${obra.id}">Ver detalhes</a>
+                    </div>
+                `;
+                
+                container.appendChild(obraElement);
+            });
+        }
+
+        function renderizarExemplares() {
+            const container = document.getElementById('lista-exemplares');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            dadosSistema.exemplares.forEach(exemplar => {
+                const obra = dadosSistema.obras.find(o => o.id === exemplar.obraId);
+                if (!obra) return;
+                
+                const statusClass = {
+                    'Disponível': 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300',
+                    'Emprestado': 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/50 dark:text-yellow-300',
+                    'Em manutenção': 'bg-orange-100 text-orange-700 dark:bg-orange-900/50 dark:text-orange-300',
+                    'Perdido': 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300'
+                }[exemplar.estado] || 'bg-gray-100 text-gray-700 dark:bg-gray-900/50 dark:text-gray-300';
+                
+                const exemplarElement = document.createElement('div');
+                exemplarElement.className = 'bg-background-light dark:bg-background-dark p-4 rounded-lg border border-gray-200 dark:border-gray-800';
+                exemplarElement.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm font-semibold text-gray-900 dark:text-white">ID: #${exemplar.id.toString().padStart(3, '0')}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Código: ${exemplar.codigo}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Obra: ${obra.titulo}</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button class="text-gray-500 dark:text-gray-400 hover:text-primary" data-action="editar-exemplar" data-id="${exemplar.id}">
+                                <span class="material-icons text-xl">edit</span>
+                            </button>
+                            <button class="text-gray-500 dark:text-gray-400 hover:text-red-500" data-action="excluir-exemplar" data-id="${exemplar.id}">
+                                <span class="material-icons text-xl">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mt-4 space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                        <p><span class="font-medium text-gray-800 dark:text-gray-200">Localização:</span> ${exemplar.local}</p>
+                        <p><span class="font-medium text-gray-800 dark:text-gray-200">Última Mov.:</span> ${exemplar.ultimaMov}</p>
+                        <p><span class="font-medium text-gray-800 dark:text-gray-200">Status:</span>
+                            <span class="inline-flex items-center rounded-full ${statusClass} px-2 py-1 text-xs font-medium ml-2">${exemplar.estado}</span>
+                        </p>
+                    </div>
+                `;
+                
+                container.appendChild(exemplarElement);
+            });
+        }
+
+        function renderizarSalas() {
+            const container = document.getElementById('lista-salas');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            dadosSistema.salas.forEach(sala => {
+                const salaElement = document.createElement('tr');
+                salaElement.className = 'border-b bg-white dark:border-gray-700 dark:bg-gray-900';
+                salaElement.innerHTML = `
+                    <th class="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white" scope="row">${sala.nome}</th>
+                    <td class="px-6 py-4">${sala.tipo}</td>
+                    <td class="px-6 py-4">${sala.capacidade}</td>
+                    <td class="px-6 py-4">${sala.recursos}</td>
+                    <td class="px-6 py-4">${sala.horario}</td>
+                    <td class="flex items-center justify-end gap-2 px-6 py-4">
+                        <button class="flex h-8 w-8 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-400" data-action="editar-sala" data-id="${sala.id}">
+                            <span class="material-icons text-base">edit</span>
+                        </button>
+                        <button class="flex h-8 w-8 items-center justify-center rounded-md text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10" data-action="excluir-sala" data-id="${sala.id}">
+                            <span class="material-icons text-base">delete</span>
+                        </button>
+                    </td>
+                `;
+                
+                container.appendChild(salaElement);
+            });
+        }
+
+        function renderizarBanners() {
+            const container = document.getElementById('lista-banners');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            dadosSistema.banners.forEach(banner => {
+                const statusClass = banner.status === 'ativo' 
+                    ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' 
+                    : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400';
+                
+                const bannerElement = document.createElement('div');
+                bannerElement.className = 'flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 shadow-sm dark:border-gray-800 dark:bg-gray-900/50';
+                bannerElement.innerHTML = `
+                    <div class="flex h-full cursor-grab items-center text-gray-400 dark:text-gray-600">
+                        <span class="material-icons">drag_indicator</span>
+                    </div>
+                    <div class="h-[70px] w-[70px] flex-shrink-0 rounded-lg bg-gray-200 dark:bg-gray-700"></div>
+                    <div class="flex flex-1 flex-col justify-center gap-1 md:flex-row md:items-center">
+                        <div class="flex-1">
+                            <p class="text-base font-medium text-gray-900 dark:text-gray-100">${banner.titulo}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Tipo: ${banner.tipo} | Período: ${banner.periodo}</p>
+                        </div>
+                        <div class="flex items-center gap-4 md:ml-4">
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Prioridade:</span>
+                                <span class="flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-700 dark:bg-gray-700 dark:text-gray-200">${banner.prioridade}</span>
+                            </div>
+                            <div class="inline-flex items-center rounded-full ${statusClass} px-2.5 py-0.5 text-xs font-semibold">
+                                ${banner.status === 'ativo' ? 'Ativo' : 'Inativo'}
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <button class="flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-800 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200" data-action="editar-banner" data-id="${banner.id}">
+                                    <span class="material-icons text-xl">edit</span>
+                                </button>
+                                <button class="flex h-8 w-8 items-center justify-center rounded-full text-red-500 hover:bg-red-100 dark:hover:bg-red-900/50" data-action="excluir-banner" data-id="${banner.id}">
+                                    <span class="material-icons text-xl">delete</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(bannerElement);
+            });
+        }
+
+        function renderizarEventos() {
+            const container = document.getElementById('lista-eventos');
+            if (!container) return;
+
+            container.innerHTML = dadosSistema.eventos.map(evento => {
+                const obra = dadosSistema.obras.find(o => o.id == evento.obraId);
+
+                return `
+                    <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 flex justify-between items-center">
+                        <div>
+                            <p class="text-lg font-bold text-gray-900 dark:text-white">${evento.nome}</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">
+                                ${new Date(evento.data).toLocaleDateString('pt-BR')} • ${evento.horario}
+                            </p>
+                            <p class="text-sm text-primary font-semibold">
+                                ${obra ? obra.titulo : 'Obra não encontrada'}
+                            </p>
+                        </div>
+                        <button class="text-gray-500 hover:text-primary dark:text-gray-300" 
+                                data-action="detalhes-evento" 
+                                data-id="${evento.id}">
+                            <span class="material-icons">chevron_right</span>
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderizarHistoricoUsuario() {
+            const container = document.getElementById("lista-historico-usuario");
+            if (!container) return;
+
+            const hoje = new Date();
+            let historico = [];
+
+            const usuario = dadosSistema.usuarioAtual;
+
+            dadosSistema.eventos.forEach(evento => {
+                const dataEvento = new Date(evento.data);
+                const inscritos = dadosSistema.inscricoes[evento.id] || [];
+                const presencas = dadosSistema.presencas[evento.id] || [];
+
+                // só eventos passados
+                if (dataEvento < hoje) {
+                    inscritos.forEach((inscrito, index) => {
+
+                        // Filtra SÓ o usuário logado
+                        if (inscrito.email === usuario.email) {
+                            const registroPresenca = presencas[index];
+                            const presente = registroPresenca ? registroPresenca.presente : false;
+
+                            historico.push({
+                                eventoId: evento.id,
+                                nomeEvento: evento.nome,
+                                data: evento.data,
+                                horario: evento.horario,
+                                presente
+                            });
+                        }
+                    });
+                }
+            });
+
+            if (historico.length === 0) {
+                container.innerHTML = `
+                    <p class="text-gray-700 dark:text-gray-300">
+                        Você ainda não participou de nenhum evento.
+                    </p>
+                `;
+                return;
+            }
+
+            container.innerHTML = historico.map(item => `
+                <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800">
+                    <p class="text-lg font-bold text-gray-900 dark:text-white">${item.nomeEvento}</p>
+
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        ${new Date(item.data).toLocaleDateString('pt-BR')} • ${item.horario}
+                    </p>
+
+                    <span class="mt-2 inline-block px-2 py-1 text-sm rounded
+                        ${item.presente ? 'bg-green-600 text-white' : 'bg-gray-400 text-white'}">
+                        ${item.presente ? 'Presente' : 'Ausente'}
+                    </span>
+
+                    ${
+                        item.presente
+                        ? `<button class="mt-4 px-3 py-2 bg-primary text-white text-sm rounded hover:bg-primary/90"
+                                data-action="gerar-certificado"
+                                data-id="${item.eventoId}">
+                                Gerar Certificado
+                        </button>`
+                        : ""
+                    }
+                </div>
+            `).join('');
+        }
+
+        function renderizarControlePresenca() {
+            const area = document.getElementById("lista-controle-presenca");
+            if (!area) return;
+
+            area.innerHTML = dadosSistema.eventos.map(evento => {
+                const inscritos = dadosSistema.inscricoes[evento.id] || [];
+                const presencas = dadosSistema.presencas[evento.id] || [];
+
+                const listaInscritos = inscritos
+                    .map((inscrito, index) => {
+                        const presenca = presencas[index] ? presencas[index].presente : false;
+
+                        return `
+                            <div class="flex justify-between items-center p-3 border-b border-gray-200 dark:border-gray-700">
+                                <div>
+                                    <p class="font-medium text-gray-900 dark:text-white">${inscrito.nome}</p>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">${inscrito.email}</p>
+                                </div>
+
+                                <span class="px-2 py-1 text-sm rounded 
+                                    ${presenca ? 'bg-green-600 text-white' : 'bg-gray-400 text-white'}">
+                                    ${presenca ? 'Presente' : 'Ausente'}
+                                </span>
+                            </div>
+                        `;
+                    })
+                    .join("");
+
+                return `
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-800">
+                        <div class="mb-3">
+                            <p class="text-lg font-bold text-gray-900 dark:text-white">${evento.nome}</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">
+                                ${new Date(evento.data).toLocaleDateString('pt-BR')} • ${evento.horario}
+                            </p>
+                        </div>
+
+                        <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                            ${listaInscritos || "<p class='p-3 text-gray-600 dark:text-gray-400'>Nenhum inscrito.</p>"}
+                        </div>
+                    </div>
+                `;
+            }).join("");
+        }
+
+
+        function gerarRecomendacoes() {
+            const container = document.getElementById("lista-recomendacoes");
+            if (!container) return;
+
+            const obras = dadosSistema.obras || [];
+
+            if (obras.length === 0) {
+                container.innerHTML = `<p class='text-gray-700 dark:text-gray-300'>Nenhuma obra cadastrada.</p>`;
+                return;
+            }
+
+            // Seleciona 6 filmes aleatórios
+            const recomendados = [...obras]
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 6);
+
+            container.innerHTML = recomendados.map(filme => `
+                <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow p-4">
+                    <p class="text-xl font-semibold text-gray-900 dark:text-white mb-2">${filme.titulo}</p>
+
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-3">
+                        ${filme.descricao || "Sem descrição disponível."}
+                    </p>
+
+                    <button class="text-primary hover:underline mt-2"
+                            data-action="detalhes-obra"
+                            data-id="${filme.id}">
+                        Ver detalhes
+                    </button>
+                </div>
+            `).join('');
+        }
+
+
+        function gerarCertificado(eventoId) {
+            const usuario = dadosSistema.usuarioAtual;
+            const evento = dadosSistema.eventos.find(e => e.id == eventoId);
+
+            const html = `
+                <div class="p-8 bg-white text-gray-900 rounded-lg border border-gray-300 shadow max-w-2xl mx-auto">
+                    <h2 class="text-2xl font-bold text-center mb-4">Certificado de Presença</h2>
+
+                    <p class="text-center text-lg leading-relaxed">
+                        Certificamos que <strong>${usuario.nome}</strong><br>
+                        participou do evento:<br>
+                        <strong>${evento.nome}</strong><br>
+                        realizado em <strong>${new Date(evento.data).toLocaleDateString('pt-BR')}</strong>
+                        às <strong>${evento.horario}</strong>.
+                    </p>
+
+                    <div class="mt-6 text-center">
+                        <canvas id="certificado-qrcode" class="mx-auto"></canvas>
+                    </div>
+
+                    <div class="mt-6 text-center">
+                        <button onclick="window.print()" 
+                            class="px-6 py-2 bg-primary text-white rounded hover:bg-primary/90">
+                            Imprimir Certificado
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            mostrarModal("Certificado Gerado", html);
+
+            // Gerar QR Code com validação
+            setTimeout(() => {
+                const qr = new QRious({
+                    element: document.getElementById("certificado-qrcode"),
+                    value: JSON.stringify({
+                        usuario: usuario.email,
+                        evento: evento.nome,
+                        data: evento.data,
+                        horario: evento.horario
+                    }),
+                    size: 160
+                });
+            }, 100);
+        }
+
+
+
+
+        function renderizarNotificacoes() {
+            const container = document.getElementById('lista-notificacoes');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            dadosSistema.notificacoes.forEach(notificacao => {
+                const tipoIcone = {
+                    'anuncio': { icon: 'campaign', bg: 'bg-blue-100', text: 'text-blue-600', darkBg: 'dark:bg-blue-900/50', darkText: 'dark:text-blue-400' },
+                    'confirmacao': { icon: 'confirmation_number', bg: 'bg-green-100', text: 'text-green-600', darkBg: 'dark:bg-green-900/50', darkText: 'dark:text-green-400' },
+                    'lembrete': { icon: 'schedule', bg: 'bg-orange-100', text: 'text-orange-600', darkBg: 'dark:bg-orange-900/50', darkText: 'dark:text-orange-400' },
+                    'cancelamento': { icon: 'cancel', bg: 'bg-red-100', text: 'text-red-600', darkBg: 'dark:bg-red-900/50', darkText: 'dark:text-red-400' }
+                }[notificacao.tipo] || { icon: 'campaign', bg: 'bg-blue-100', text: 'text-blue-600', darkBg: 'dark:bg-blue-900/50', darkText: 'dark:text-blue-400' };
+                
+                const notificacaoElement = document.createElement('li');
+                notificacaoElement.className = 'flex flex-col gap-2 p-4 sm:flex-row sm:items-center sm:justify-between';
+                notificacaoElement.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <div class="mt-1 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full ${tipoIcone.bg} ${tipoIcone.text} ${tipoIcone.darkBg} ${tipoIcone.darkText}">
+                            <span class="material-icons text-base">${tipoIcone.icon}</span>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-gray-800 dark:text-gray-200">${notificacao.titulo}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Enviado para: ${notificacao.destinatario}</p>
+                            <p class="text-xs text-gray-400 dark:text-gray-500">${notificacao.data}</p>
+                        </div>
+                    </div>
+                    <button class="mt-2 flex w-full cursor-pointer items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 sm:mt-0 sm:w-auto" data-action="reenviar-notificacao" data-id="${notificacao.id}">
+                        <span class="material-icons text-base">replay</span>
+                        <span>Reenviar</span>
+                    </button>
+                `;
+                
+                container.appendChild(notificacaoElement);
+            });
+        }
+
+        // Função para renderizar o calendário
+        function renderizarCalendario() {
+            const container = document.getElementById('calendario-dias');
+            const mesAtualElement = document.getElementById('mes-atual');
+            if (!container || !mesAtualElement) return;
+            
+            // Atualizar o título do mês
+            const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+            mesAtualElement.textContent = `${meses[mesAtual]} ${anoAtual}`;
+            
+            // Limpar o calendário
+            container.innerHTML = '';
+            
+            // Obter o primeiro dia do mês e o número de dias
+            const primeiroDia = new Date(anoAtual, mesAtual, 1);
+            const ultimoDia = new Date(anoAtual, mesAtual + 1, 0);
+            const diasNoMes = ultimoDia.getDate();
+            const primeiroDiaSemana = primeiroDia.getDay(); // 0 = Domingo, 1 = Segunda, ...
+            
+            // Adicionar dias vazios para a primeira semana
+            for (let i = 0; i < primeiroDiaSemana; i++) {
+                const diaVazio = document.createElement('div');
+                diaVazio.className = 'calendar-day rounded border border-gray-200 dark:border-gray-700 p-2';
+                container.appendChild(diaVazio);
+            }
+            
+            // Adicionar os dias do mês
+            for (let dia = 1; dia <= diasNoMes; dia++) {
+                const diaElement = document.createElement('div');
+                diaElement.className = 'calendar-day rounded border border-gray-200 dark:border-gray-700 p-2';
+                diaElement.setAttribute('data-action', 'dia');
+                diaElement.setAttribute('data-data', `${anoAtual}-${(mesAtual + 1).toString().padStart(2, '0')}-${dia.toString().padStart(2, '0')}`);
+                
+                // Verificar se há reservas para este dia
+                const dataStr = `${anoAtual}-${(mesAtual + 1).toString().padStart(2, '0')}-${dia.toString().padStart(2, '0')}`;
+                const reservasDoDia = dadosSistema.reservas.filter(reserva => reserva.data === dataStr);
+                
+                let eventosHTML = '';
+                reservasDoDia.forEach(reserva => {
+                    const sala = dadosSistema.salas.find(s => s.id === reserva.salaId);
+                    const obra = dadosSistema.obras.find(o => o.id === reserva.obraId);
+                    if (sala && obra) {
+                        eventosHTML += `
+                            <div class="calendar-event bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300">
+                                ${reserva.horarioInicio} - ${sala.nome}
+                            </div>
+                        `;
+                    }
+                });
+                
+                diaElement.innerHTML = `
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">${dia}</span>
+                    <div class="mt-1 space-y-1">
+                        ${eventosHTML}
+                    </div>
+                `;
+                
+                container.appendChild(diaElement);
+            }
+        }
+
+        // Função para renderizar o gráfico de ocupação semanal
+        function renderizarOcupacaoSemanal() {
+            const container = document.getElementById('ocupacao-semanal');
+            if (!container) return;
+            
+            // Calcular ocupação para cada dia da semana
+            const ocupacao = [60, 80, 90, 75, 65, 40, 25]; // Valores de exemplo
+            
+            container.innerHTML = '';
+            
+            const dias = ['S', 'T', 'Q', 'Q', 'S', 'S', 'D'];
+            
+            dias.forEach((dia, index) => {
+                const divDia = document.createElement('div');
+                divDia.className = 'flex flex-col items-center flex-1';
+                
+                const altura = ocupacao[index];
+                const cor = altura > 80 ? 'bg-primary' : (altura > 50 ? 'bg-slate-200 dark:bg-slate-700' : 'bg-slate-200 dark:bg-slate-700');
+                
+                divDia.innerHTML = `
+                    <div class="w-full ${cor} rounded-t-md" style="height: ${altura}%;"></div>
+                    <span class="text-xs text-slate-500 dark:text-slate-400 mt-1">${dia}</span>
+                `;
+                
+                container.appendChild(divDia);
+            });
+        }
+
+        function abrirFormularioNovoEvento() {
+            const opcoesObras = dadosSistema.obras.map(o => `
+                <option value="${o.id}">${o.titulo}</option>
+            `).join('');
+
+            const conteudoFormulario = `
+                <form id="form-novo-evento" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Nome do Evento</label>
+                        <input type="text" name="nome" class="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-white" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Data</label>
+                        <input type="date" name="data" class="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-white" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Horário</label>
+                        <input type="time" name="horario" class="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-white" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Obra vinculada</label>
+                        <select name="obraId" class="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-white" required>
+                            <option value="">Selecione...</option>
+                            ${opcoesObras}
+                        </select>
+                    </div>
+                </form>
+            `;
+
+            mostrarModal("Novo Evento", conteudoFormulario, () => salvarNovoEvento());
+        }
+
+        function abrirFormularioInscricao(eventoId) {
+            const evento = dadosSistema.eventos.find(e => e.id == eventoId);
+
+            const html = `
+                <form id="form-inscricao-evento" class="space-y-4">
+                    <p class="text-gray-700 dark:text-gray-300">
+                        Inscrição para o evento:<br>
+                        <strong>${evento.nome}</strong><br>
+                        ${new Date(evento.data).toLocaleDateString('pt-BR')} às ${evento.horario}
+                    </p>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Nome</label>
+                        <input type="text" name="nome" class="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-white" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Email</label>
+                        <input type="email" name="email" class="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-white" required>
+                    </div>
+                </form>
+            `;
+
+            mostrarModal(`Inscrição`, html, () => salvarInscricaoEvento(eventoId));
+        }
+
+        function salvarInscricaoEvento(eventoId) {
+            const form = document.getElementById("form-inscricao-evento");
+            const dados = new FormData(form);
+
+            if (!dadosSistema.inscricoes[eventoId]) {
+                dadosSistema.inscricoes[eventoId] = [];
+            }
+
+            dadosSistema.inscricoes[eventoId].push({
+                nome: dados.get("nome"),
+                email: dados.get("email")
+            });
+
+            fecharModal();
+            mostrarToast("Inscrição realizada com sucesso!", "success");
+
+            mostrarModal("Inscrição Realizada", `
+                <p class="text-gray-800 dark:text-gray-200">
+                    Inscrição confirmada para <strong>${dados.get("nome")}</strong>.
+                </p>
+
+                <button 
+                    class="w-full bg-primary hover:bg-primary/90 text-white font-semibold px-4 py-2 rounded-md mt-4"
+                    data-action="abrir-comprovante"
+                    data-id="${eventoId}"
+                    data-index="${ (dadosSistema.inscricoes[eventoId].length - 1) }">
+                    Ver Comprovante
+                </button>
+`);        }
+
+        function salvarNovoEvento() {
+            const form = document.getElementById("form-novo-evento");
+            const dados = new FormData(form);
+
+            const novoEvento = {
+                id: Date.now(),
+                nome: dados.get("nome"),
+                data: dados.get("data"),
+                horario: dados.get("horario"),
+                obraId: parseInt(dados.get("obraId"))
+            };
+
+            dadosSistema.eventos.push(novoEvento);
+
+            fecharModal();
+            mostrarToast("Evento criado com sucesso!", "success");
+
+            // Re-renderizar lista
+            renderizarEventos();
+        }
+
+        // Função para gerar relatório
+        function gerarRelatorio() {
+            const tipoRelatorio = document.getElementById('report-type').value;
+            const periodo = document.getElementById('period').value;
+            const sala = document.getElementById('room').value;
+            const curso = document.getElementById('course').value;
+            
+            const resultadoContainer = document.getElementById('resultado-relatorio');
+            const tituloRelatorio = document.getElementById('titulo-relatorio');
+            const conteudoRelatorio = document.getElementById('conteudo-relatorio');
+            
+            if (!resultadoContainer || !tituloRelatorio || !conteudoRelatorio) return;
+            
+            // Mostrar o container do relatório
+            resultadoContainer.classList.remove('hidden');
+            
+            let titulo = '';
+            let conteudo = '';
+            
+            switch(tipoRelatorio) {
+                case 'reservas':
+                    titulo = 'Relatório de Reservas';
+                    
+                    // Filtrar reservas conforme os filtros
+                    let reservasFiltradas = dadosSistema.reservas;
+                    
+                    if (curso !== 'todos') {
+                        reservasFiltradas = reservasFiltradas.filter(reserva => reserva.curso === curso);
+                    }
+                    
+                    // Gerar tabela de reservas
+                    conteudo = `
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-800">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Obra</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Data</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Sala</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Curso</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-900">
+                                    ${reservasFiltradas.map(reserva => {
+                                        const obra = dadosSistema.obras.find(o => o.id === reserva.obraId);
+                                        const sala = dadosSistema.salas.find(s => s.id === reserva.salaId);
+                                        return `
+                                            <tr>
+                                                <td class="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">${obra ? obra.titulo : 'N/A'}</td>
+                                                <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400">${reserva.data}</td>
+                                                <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400">${sala ? sala.nome : 'N/A'}</td>
+                                                <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400">${reserva.curso}</td>
+                                            </tr>
+                                        `;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'obras':
+                    titulo = 'Relatório de Uso de Obras';
+                    
+                    // Contar quantas vezes cada obra foi reservada
+                    const usoObras = {};
+                    dadosSistema.reservas.forEach(reserva => {
+                        if (!usoObras[reserva.obraId]) {
+                            usoObras[reserva.obraId] = 0;
+                        }
+                        usoObras[reserva.obraId]++;
+                    });
+                    
+                    conteudo = `
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-800">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Obra</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Diretor</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Reservas</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-900">
+                                    ${dadosSistema.obras.map(obra => {
+                                        const reservas = usoObras[obra.id] || 0;
+                                        return `
+                                            <tr>
+                                                <td class="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">${obra.titulo}</td>
+                                                <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400">${obra.diretor}</td>
+                                                <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400">${reservas}</td>
+                                            </tr>
+                                        `;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'exemplares':
+                    titulo = 'Relatório de Exemplares';
+                    
+                    conteudo = `
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-800">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Código</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Obra</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Estado</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Local</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-900">
+                                    ${dadosSistema.exemplares.map(exemplar => {
+                                        const obra = dadosSistema.obras.find(o => o.id === exemplar.obraId);
+                                        return `
+                                            <tr>
+                                                <td class="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">${exemplar.codigo}</td>
+                                                <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400">${obra ? obra.titulo : 'N/A'}</td>
+                                                <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400">${exemplar.estado}</td>
+                                                <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400">${exemplar.local}</td>
+                                            </tr>
+                                        `;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'salas':
+                    titulo = 'Relatório de Ocupação de Salas';
+                    
+                    // Calcular ocupação de cada sala
+                    const ocupacaoSalas = {};
+                    dadosSistema.reservas.forEach(reserva => {
+                        if (!ocupacaoSalas[reserva.salaId]) {
+                            ocupacaoSalas[reserva.salaId] = 0;
+                        }
+                        ocupacaoSalas[reserva.salaId]++;
+                    });
+                    
+                    conteudo = `
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-800">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Sala</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Tipo</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Capacidade</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Reservas</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-900">
+                                    ${dadosSistema.salas.map(sala => {
+                                        const reservas = ocupacaoSalas[sala.id] || 0;
+                                        return `
+                                            <tr>
+                                                <td class="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">${sala.nome}</td>
+                                                <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400">${sala.tipo}</td>
+                                                <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400">${sala.capacidade}</td>
+                                                <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400">${reservas}</td>
+                                            </tr>
+                                        `;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            tituloRelatorio.textContent = titulo;
+            conteudoRelatorio.innerHTML = conteudo;
+        }
+
+        // Funções para gerenciar dados
+        function adicionarObra(obra) {
+            obra.id = dadosSistema.obras.length > 0 
+                ? Math.max(...dadosSistema.obras.map(o => o.id)) + 1 
+                : 1;
+            dadosSistema.obras.push(obra);
+            renderizarObras();
+            mostrarToast('Obra adicionada com sucesso!', 'sucesso');
+        }
+
+        function editarObra(id, obraAtualizada) {
+            const index = dadosSistema.obras.findIndex(o => o.id === id);
+            if (index !== -1) {
+                dadosSistema.obras[index] = { ...dadosSistema.obras[index], ...obraAtualizada };
+                renderizarObras();
+                mostrarToast('Obra atualizada com sucesso!', 'sucesso');
+            }
+        }
+
+        function excluirObra(id) {
+            dadosSistema.obras = dadosSistema.obras.filter(o => o.id !== id);
+            renderizarObras();
+            mostrarToast('Obra excluída com sucesso!', 'sucesso');
+        }
+
+        function adicionarExemplar(exemplar) {
+            exemplar.id = dadosSistema.exemplares.length > 0 
+                ? Math.max(...dadosSistema.exemplares.map(e => e.id)) + 1 
+                : 1;
+            exemplar.ultimaMov = new Date().toLocaleDateString('pt-BR');
+            dadosSistema.exemplares.push(exemplar);
+            renderizarExemplares();
+            mostrarToast('Exemplar adicionado com sucesso!', 'sucesso');
+        }
+
+        function excluirExemplar(id) {
+            dadosSistema.exemplares = dadosSistema.exemplares.filter(e => e.id !== id);
+            renderizarExemplares();
+            mostrarToast('Exemplar excluído com sucesso!', 'sucesso');
+        }
+
+        function adicionarSala(sala) {
+            sala.id = dadosSistema.salas.length > 0 
+                ? Math.max(...dadosSistema.salas.map(s => s.id)) + 1 
+                : 1;
+            dadosSistema.salas.push(sala);
+            renderizarSalas();
+            mostrarToast('Sala adicionada com sucesso!', 'sucesso');
+        }
+
+        function excluirSala(id) {
+            dadosSistema.salas = dadosSistema.salas.filter(s => s.id !== id);
+            renderizarSalas();
+            mostrarToast('Sala excluída com sucesso!', 'sucesso');
+        }
+
+        function adicionarBanner(banner) {
+            banner.id = dadosSistema.banners.length > 0 
+                ? Math.max(...dadosSistema.banners.map(b => b.id)) + 1 
+                : 1;
+            dadosSistema.banners.push(banner);
+            renderizarBanners();
+            mostrarToast('Banner adicionado com sucesso!', 'sucesso');
+        }
+
+        function excluirBanner(id) {
+            dadosSistema.banners = dadosSistema.banners.filter(b => b.id !== id);
+            renderizarBanners();
+            mostrarToast('Banner excluído com sucesso!', 'sucesso');
+        }
+
+        // Função para popular o select de obras no formulário de exemplares
+        function popularSelectObras() {
+            const selectObra = document.getElementById('obra-exemplar');
+            if (!selectObra) return;
+            
+            selectObra.innerHTML = '<option value="">Selecione uma obra</option>';
+            
+            dadosSistema.obras.forEach(obra => {
+                const option = document.createElement('option');
+                option.value = obra.id;
+                option.textContent = obra.titulo;
+                selectObra.appendChild(option);
+            });
+        }
+
+        // Função para popular o select de salas no formulário de relatórios
+        function popularSelectSalas() {
+            const selectSala = document.getElementById('room');
+            if (!selectSala) return;
+            
+            selectSala.innerHTML = '<option value="todas">Todas</option>';
+            
+            dadosSistema.salas.forEach(sala => {
+                const option = document.createElement('option');
+                option.value = sala.id;
+                option.textContent = sala.nome;
+                selectSala.appendChild(option);
+            });
+        }
+
+        function abrirComprovanteInscricao(eventoId, indexInscricao) {
+            const evento = dadosSistema.eventos.find(e => e.id == eventoId);
+            const inscricao = dadosSistema.inscricoes[eventoId][indexInscricao];
+
+            const codigo = JSON.stringify({
+                eventoId,
+                nome: inscricao.nome,
+                email: inscricao.email,
+                data: evento.data,
+                horario: evento.horario
+            });
+
+            const html = `
+                <div class="space-y-4 text-center">
+                    <h2 class="text-lg font-bold text-gray-900 dark:text-white">Comprovante de Inscrição</h2>
+
+                    <p class="text-gray-700 dark:text-gray-300"><strong>${inscricao.nome}</strong></p>
+                    <p class="text-gray-600 dark:text-gray-400">${inscricao.email}</p>
+
+                    <hr>
+
+                    <p class="text-gray-800 dark:text-gray-200 font-medium">${evento.nome}</p>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        ${new Date(evento.data).toLocaleDateString('pt-BR')} às ${evento.horario}
+                    </p>
+
+                    <canvas id="qrcode-canvas" class="mx-auto"></canvas>
+
+                    <button onclick="window.print()" 
+                        class="w-full mt-4 bg-primary hover:bg-primary/90 text-white py-2 rounded-md font-semibold">
+                        Imprimir
+                    </button>
+                </div>
+            `;
+
+            mostrarModal("Comprovante", html);
+
+            setTimeout(() => {
+                const qr = new QRious({
+                    element: document.getElementById("qrcode-canvas"),
+                    value: codigo,
+                    size: 180
+                });
+            }, 100);
+        }
+
+        // Navegação entre seções
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('nav a');
+            const contentSections = document.querySelectorAll('.content-section');
+            const pageTitle = document.getElementById('page-title');
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.querySelector('aside');
+            
+            // Navigation click handler
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Get the target section
+                    const targetSection = this.getAttribute('data-section');
+                    
+                    // Update active nav link
+                    navLinks.forEach(navLink => {
+                        navLink.classList.remove('nav-active');
+                    });
+                    this.classList.add('nav-active');
+                    
+                    // Show target section and hide others
+                    contentSections.forEach(section => {
+                        section.classList.remove('active-section');
+                    });
+                    document.getElementById(targetSection).classList.add('active-section');
+                    
+                    // Update page title
+                    pageTitle.textContent = this.querySelector('span:last-child').textContent;
+                    
+                    // Renderizar dados da seção se necessário
+                    if (targetSection === 'obras') {
+                        renderizarObras();
+                    } else if (targetSection === 'exemplares') {
+                        renderizarExemplares();
+                        popularSelectObras();
+                    } else if (targetSection === 'salas') {
+                        renderizarSalas();
+                    } else if (targetSection === 'calendario') {
+                        renderizarCalendario();
+                    } else if (targetSection === 'banners') {
+                        renderizarBanners();
+                    } else if (targetSection === 'caixa-saida') {
+                        renderizarNotificacoes();
+                    } else if (targetSection === 'dashboard') {
+                        renderizarOcupacaoSemanal();
+                    } else if (targetSection === 'relatorios') {
+                        popularSelectSalas();
+                    }
+                    else if (targetSection === 'eventos') {
+                        renderizarEventos();
+                    }
+                    else if (targetSection === 'historico-usuario') {
+                        renderizarHistoricoUsuario();
+                    }
+                    else if (targetSection === 'recomendacoes') {
+                        gerarRecomendacoes();
+                    }
+                    else if (targetSection === 'controle-presenca') {
+                        renderizarControlePresenca();
+                    }
+
+                });
+            });
+            
+            // Mobile menu toggle
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('hidden');
+            });
+
+            // Fechar modal
+            modalClose.addEventListener('click', fecharModal);
+            modalCancel.addEventListener('click', fecharModal);
+
+            // Event delegation para botões com data-action
+            document.addEventListener('click', function(e) {
+                const target = e.target.closest('[data-action]');
+                if (!target) return;
+                
+                const action = target.getAttribute('data-action');
+                const id = target.getAttribute('data-id');
+                
+                // Executar ação baseada no data-action
+                executarAcao(action, id, target);
+            });
+
+            // Configurar o evento de submit do formulário de exemplares
+            document.getElementById('form-exemplar').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const obraId = parseInt(document.getElementById('obra-exemplar').value);
+                const codigo = document.getElementById('codigo').value;
+                const estado = document.getElementById('estado').value;
+                const local = document.getElementById('local').value;
+                
+                if (obraId && codigo && estado) {
+                    adicionarExemplar({
+                        obraId: obraId,
+                        codigo: codigo,
+                        estado: estado,
+                        local: local
+                    });
+                    
+                    // Limpar formulário e ocultar
+                    this.reset();
+                    document.getElementById('form-exemplar-container').classList.add('hidden');
+                } else {
+                    mostrarToast('Preencha todos os campos obrigatórios', 'erro');
+                }
+            });
+            
+            // Renderizar dados iniciais
+            renderizarObras();
+            renderizarExemplares();
+            renderizarSalas();
+            renderizarBanners();
+            renderizarNotificacoes();
+            renderizarCalendario();
+            renderizarOcupacaoSemanal();
+            popularSelectObras();
+            popularSelectSalas();
+        });
+
+        // Função para executar ações baseadas em data-action
+        function executarAcao(acao, id, elemento) {
+            switch(acao) {
+                // Dashboard
+                case 'reservas':
+                    mostrarToast('Navegando para reservas...', 'sucesso');
+                    break;
+                case 'ocupacao':
+                    mostrarToast('Navegando para ocupação...', 'sucesso');
+                    break;
+                case 'exemplares':
+                    mostrarToast('Navegando para exemplares...', 'sucesso');
+                    break;
+                case 'eventos':
+                    mostrarToast('Navegando para eventos...', 'sucesso');
+                    break;
+                case 'ver-todas-notificacoes':
+                    mostrarToast('Abrindo todas as notificações...', 'sucesso');
+                    break;
+                case 'notificacao':
+                    mostrarToast(`Abrindo notificação ${id}...`, 'sucesso');
+                    break;
+                case 'criar-obra':
+                    document.querySelector('[data-section="obras"]').click();
+                    break;
+                case 'cadastrar-exemplar':
+                    document.querySelector('[data-section="exemplares"]').click();
+                    break;
+                case 'adicionar-sala':
+                    document.querySelector('[data-section="salas"]').click();
+                    break;
+                case 'detalhes-evento':
+                    const evento = dadosSistema.eventos.find(ev => ev.id == id);
+                    if (evento) {
+                        const obra = dadosSistema.obras.find(o => o.id == evento.obraId);
+                        const totalInscritos = (dadosSistema.inscricoes[evento.id] || []).length;
+
+
+                        mostrarModal("Detalhes do Evento", `
+                            <p><strong>Nome do evento:</strong> ${evento.nome}</p>
+                            <p><strong>Data:</strong> ${new Date(evento.data).toLocaleDateString('pt-BR')}</p>
+                            <p><strong>Horário:</strong> ${evento.horario}</p>
+
+                            <p><strong>Obra relacionada:</strong></p>
+                            <p>${obra ? obra.titulo : 'Não vinculada'}</p>
+                            <p><em>${obra ? obra.diretor : ''}</em></p>
+                            <p><strong>Inscritos:</strong> ${totalInscritos}</p>
+
+                            <button 
+                                class="w-full bg-primary hover:bg-primary/90 text-white font-semibold px-4 py-2 rounded-md"
+                                data-action="inscrever-evento"
+                                data-id="${evento.id}">
+                                Inscrever-se no Evento
+                            </button>
+                        `);
+                    }
+                    break;
+                case 'inscrever-evento':
+                    abrirFormularioInscricao(id);
+                    break;
+                case 'novo-evento':
+                    abrirFormularioNovoEvento();
+                    break;
+                case 'abrir-comprovante':
+                    const idx = elemento.getAttribute("data-index");
+                    abrirComprovanteInscricao(id, idx);
+                    break;
+                case 'gerar-certificado':
+                    gerarCertificado(id);
+                    break;
+                
+                // Obras
+                case 'adicionar-obra':
+                    mostrarModal('Adicionar Nova Obra', `
+                        <form id="form-obra">
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Título</label>
+                                <input type="text" id="obra-titulo" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Diretor</label>
+                                <input type="text" id="obra-diretor" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ano</label>
+                                <input type="number" id="obra-ano" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Gêneros (separados por vírgula)</label>
+                                <input type="text" id="obra-generos" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Ex: Drama, Suspense, Ação" required>
+                            </div>
+                        </form>
+                    `, function() {
+                        const titulo = document.getElementById('obra-titulo').value;
+                        const diretor = document.getElementById('obra-diretor').value;
+                        const ano = parseInt(document.getElementById('obra-ano').value);
+                        const generos = document.getElementById('obra-generos').value.split(',').map(g => g.trim()).filter(g => g);
+                        
+                        if (titulo && diretor && ano && generos.length > 0) {
+                            adicionarObra({
+                                titulo,
+                                diretor,
+                                ano,
+                                generos,
+                                exemplares: 0
+                            });
+                            fecharModal();
+                        } else {
+                            mostrarToast('Preencha todos os campos obrigatórios', 'erro');
+                        }
+                    });
+                    break;
+                case 'editar-obra':
+                    const obra = dadosSistema.obras.find(o => o.id == id);
+                    if (!obra) break;
+                    
+                    mostrarModal('Editar Obra', `
+                        <form id="form-obra">
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Título</label>
+                                <input type="text" id="obra-titulo" value="${obra.titulo}" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Diretor</label>
+                                <input type="text" id="obra-diretor" value="${obra.diretor}" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ano</label>
+                                <input type="number" id="obra-ano" value="${obra.ano}" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Gêneros (separados por vírgula)</label>
+                                <input type="text" id="obra-generos" value="${obra.generos.join(', ')}" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Ex: Drama, Suspense, Ação" required>
+                            </div>
+                        </form>
+                    `, function() {
+                        const titulo = document.getElementById('obra-titulo').value;
+                        const diretor = document.getElementById('obra-diretor').value;
+                        const ano = parseInt(document.getElementById('obra-ano').value);
+                        const generos = document.getElementById('obra-generos').value.split(',').map(g => g.trim()).filter(g => g);
+                        
+                        if (titulo && diretor && ano && generos.length > 0) {
+                            editarObra(parseInt(id), {
+                                titulo,
+                                diretor,
+                                ano,
+                                generos
+                            });
+                            fecharModal();
+                        } else {
+                            mostrarToast('Preencha todos os campos obrigatórios', 'erro');
+                        }
+                    });
+                    break;
+                case 'excluir-obra':
+                    mostrarModal('Excluir Obra', `
+                        <p>Tem certeza que deseja excluir esta obra?</p>
+                        <p class="mt-2 text-sm text-gray-500">Esta ação não pode ser desfeita.</p>
+                    `, function() {
+                        excluirObra(parseInt(id));
+                        fecharModal();
+                    });
+                    break;
+                case 'detalhes-obra':
+                    mostrarToast(`Abrindo detalhes da obra ${id}...`, 'sucesso');
+                    break;
+                
+                // Exemplares
+                case 'novo-exemplar':
+                    // Mostrar o formulário de cadastro
+                    document.getElementById('form-exemplar-container').classList.remove('hidden');
+                    // Rolar para o formulário
+                    document.getElementById('form-exemplar-container').scrollIntoView({ behavior: 'smooth' });
+                    break;
+                case 'cancelar-exemplar':
+                    // Ocultar o formulário e limpar os campos
+                    document.getElementById('form-exemplar-container').classList.add('hidden');
+                    document.getElementById('form-exemplar').reset();
+                    mostrarToast('Cadastro cancelado', 'sucesso');
+                    break;
+                case 'excluir-exemplar':
+                    mostrarModal('Excluir Exemplar', `
+                        <p>Tem certeza que deseja excluir este exemplar?</p>
+                        <p class="mt-2 text-sm text-gray-500">Esta ação não pode ser desfeita.</p>
+                    `, function() {
+                        excluirExemplar(parseInt(id));
+                        fecharModal();
+                    });
+                    break;
+                
+                // Salas
+                case 'cadastrar-sala':
+                    mostrarModal('Cadastrar Nova Sala', `
+                        <form id="form-sala">
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nome</label>
+                                <input type="text" id="sala-nome" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tipo</label>
+                                <select id="sala-tipo" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="Sala">Sala</option>
+                                    <option value="Cabine">Cabine</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Capacidade</label>
+                                <input type="number" id="sala-capacidade" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Recursos</label>
+                                <input type="text" id="sala-recursos" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Ex: 4K, Dolby Atmos, Acessibilidade" required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Horário de Funcionamento</label>
+                                <input type="text" id="sala-horario" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Ex: 08:00 - 22:00" required>
+                            </div>
+                        </form>
+                    `, function() {
+                        const nome = document.getElementById('sala-nome').value;
+                        const tipo = document.getElementById('sala-tipo').value;
+                        const capacidade = parseInt(document.getElementById('sala-capacidade').value);
+                        const recursos = document.getElementById('sala-recursos').value;
+                        const horario = document.getElementById('sala-horario').value;
+                        
+                        if (nome && tipo && capacidade && recursos && horario) {
+                            adicionarSala({
+                                nome,
+                                tipo,
+                                capacidade,
+                                recursos,
+                                horario
+                            });
+                            fecharModal();
+                        } else {
+                            mostrarToast('Preencha todos os campos obrigatórios', 'erro');
+                        }
+                    });
+                    break;
+                case 'editar-sala':
+                    const sala = dadosSistema.salas.find(s => s.id == id);
+                    if (!sala) break;
+                    
+                    mostrarModal('Editar Sala', `
+                        <form id="form-sala">
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nome</label>
+                                <input type="text" id="sala-nome" value="${sala.nome}" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tipo</label>
+                                <select id="sala-tipo" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                                    <option value="Sala" ${sala.tipo === 'Sala' ? 'selected' : ''}>Sala</option>
+                                    <option value="Cabine" ${sala.tipo === 'Cabine' ? 'selected' : ''}>Cabine</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Capacidade</label>
+                                <input type="number" id="sala-capacidade" value="${sala.capacidade}" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Recursos</label>
+                                <input type="text" id="sala-recursos" value="${sala.recursos}" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Horário de Funcionamento</label>
+                                <input type="text" id="sala-horario" value="${sala.horario}" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                            </div>
+                        </form>
+                    `, function() {
+                        const nome = document.getElementById('sala-nome').value;
+                        const tipo = document.getElementById('sala-tipo').value;
+                        const capacidade = parseInt(document.getElementById('sala-capacidade').value);
+                        const recursos = document.getElementById('sala-recursos').value;
+                        const horario = document.getElementById('sala-horario').value;
+                        
+                        if (nome && tipo && capacidade && recursos && horario) {
+                            // Atualizar sala
+                            const index = dadosSistema.salas.findIndex(s => s.id == id);
+                            if (index !== -1) {
+                                dadosSistema.salas[index] = { 
+                                    ...dadosSistema.salas[index], 
+                                    nome, 
+                                    tipo, 
+                                    capacidade,
+                                    recursos,
+                                    horario
+                                };
+                                renderizarSalas();
+                                mostrarToast('Sala atualizada com sucesso!', 'sucesso');
+                            }
+                            fecharModal();
+                        } else {
+                            mostrarToast('Preencha todos os campos obrigatórios', 'erro');
+                        }
+                    });
+                    break;
+                case 'excluir-sala':
+                    mostrarModal('Excluir Sala', `
+                        <p>Tem certeza que deseja excluir esta sala?</p>
+                        <p class="mt-2 text-sm text-gray-500">Esta ação não pode ser desfeita.</p>
+                    `, function() {
+                        excluirSala(parseInt(id));
+                        fecharModal();
+                    });
+                    break;
+                
+                // Calendário
+                case 'mes-anterior':
+                    mesAtual--;
+                    if (mesAtual < 0) {
+                        mesAtual = 11;
+                        anoAtual--;
+                    }
+                    renderizarCalendario();
+                    break;
+                case 'mes-seguinte':
+                    mesAtual++;
+                    if (mesAtual > 11) {
+                        mesAtual = 0;
+                        anoAtual++;
+                    }
+                    renderizarCalendario();
+                    break;
+                case 'dia':
+                    const data = elemento.getAttribute('data-data');
+                    
+                    // Formulário para nova reserva
+                    const formReserva = `
+                        <div class="mt-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                            <h4 class="font-medium text-gray-900 dark:text-white mb-3">Nova Reserva para ${data}</h4>
+                            <form id="form-nova-reserva">
+                                <div class="grid grid-cols-1 gap-3">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Sala</label>
+                                        <select class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" id="reserva-sala" required>
+                                            <option value="">Selecione uma sala</option>
+                                            ${dadosSistema.salas.map(sala => 
+                                                `<option value="${sala.id}">${sala.nome} (${sala.tipo})</option>`
+                                            ).join('')}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Obra</label>
+                                        <select class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" id="reserva-obra" required>
+                                            <option value="">Selecione uma obra</option>
+                                            ${dadosSistema.obras.map(obra => 
+                                                `<option value="${obra.id}">${obra.titulo}</option>`
+                                            ).join('')}
+                                        </select>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Horário Início</label>
+                                            <input type="time" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" id="reserva-inicio" required>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Horário Fim</label>
+                                            <input type="time" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" id="reserva-fim" required>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Curso/Solicitante</label>
+                                        <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" id="reserva-curso" placeholder="Ex: Medicina, Psicologia..." required>
+                                    </div>
+                                </div>
+                                <div class="mt-4 flex justify-end">
+                                    <button type="button" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600" onclick="fecharModal()">
+                                        Cancelar
+                                    </button>
+                                    <button type="submit" class="ml-2 px-4 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-blue-700">
+                                        Salvar Reserva
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    `;
+                    
+                    const reservasDoDia = dadosSistema.reservas.filter(reserva => reserva.data === data);
+                    
+                    let reservasHTML = '';
+                    if (reservasDoDia.length > 0) {
+                        reservasHTML = `
+                            <div class="mt-4">
+                                <h4 class="font-medium text-gray-900 dark:text-white mb-2">Reservas existentes:</h4>
+                                <ul class="space-y-2">
+                                    ${reservasDoDia.map(reserva => {
+                                        const sala = dadosSistema.salas.find(s => s.id === reserva.salaId);
+                                        const obra = dadosSistema.obras.find(o => o.id === reserva.obraId);
+                                        return `
+                                            <li class="flex justify-between items-center p-2 bg-gray-50 dark:bg-gray-800 rounded">
+                                                <div>
+                                                    <p class="font-medium text-gray-900 dark:text-white">${sala ? sala.nome : 'N/A'}</p>
+                                                    <p class="text-sm text-gray-500 dark:text-gray-400">${reserva.horarioInicio} - ${reserva.horarioFim}</p>
+                                                </div>
+                                                <span class="text-sm text-gray-500 dark:text-gray-400">${obra ? obra.titulo : 'N/A'}</span>
+                                            </li>
+                                        `;
+                                    }).join('')}
+                                </ul>
+                            </div>
+                        `;
+                    } else {
+                        reservasHTML = '<p class="text-gray-500 dark:text-gray-400 mt-4">Nenhuma reserva para este dia.</p>';
+                    }
+                    
+                    mostrarModal(`Reservas para ${data}`, `
+                        <div>
+                            ${reservasHTML}
+                            ${formReserva}
+                        </div>
+                    `, function() {
+                        // Configurar o submit do formulário de reserva
+                        document.getElementById('form-nova-reserva').addEventListener('submit', function(e) {
+                            e.preventDefault();
+                            
+                            const salaId = parseInt(document.getElementById('reserva-sala').value);
+                            const obraId = parseInt(document.getElementById('reserva-obra').value);
+                            const horarioInicio = document.getElementById('reserva-inicio').value;
+                            const horarioFim = document.getElementById('reserva-fim').value;
+                            const curso = document.getElementById('reserva-curso').value;
+                            
+                            if (salaId && obraId && horarioInicio && horarioFim && curso) {
+                                // Adicionar nova reserva
+                                const novaReserva = {
+                                    id: dadosSistema.reservas.length > 0 
+                                        ? Math.max(...dadosSistema.reservas.map(r => r.id)) + 1 
+                                        : 1,
+                                    salaId: salaId,
+                                    obraId: obraId,
+                                    data: data,
+                                    horarioInicio: horarioInicio,
+                                    horarioFim: horarioFim,
+                                    curso: curso
+                                };
+                                
+                                dadosSistema.reservas.push(novaReserva);
+                                renderizarCalendario();
+                                mostrarToast('Reserva criada com sucesso!', 'sucesso');
+                                fecharModal();
+                            } else {
+                                mostrarToast('Preencha todos os campos', 'erro');
+                            }
+                        });
+                    });
+                    break;
+                
+                // Notificações
+                case 'cancelar-configuracoes':
+                    mostrarToast('Alterações canceladas', 'sucesso');
+                    break;
+                case 'salvar-configuracoes':
+                    mostrarToast('Configurações salvas com sucesso!', 'sucesso');
+                    break;
+                
+                // Caixa de Saída
+                case 'reenviar-notificacao':
+                    mostrarToast(`Notificação ${id} reenviada com sucesso!`, 'sucesso');
+                    break;
+                
+                // Relatórios
+                case 'exportar-csv':
+                    mostrarToast('Exportando relatório em CSV...', 'sucesso');
+                    break;
+                case 'exportar-pdf':
+                    mostrarToast('Exportando relatório em PDF...', 'sucesso');
+                    break;
+                case 'gerar-relatorio':
+                    gerarRelatorio();
+                    mostrarToast('Relatório gerado com sucesso!', 'sucesso');
+                    break;
+                
+                // Banners
+                case 'novo-banner':
+                    mostrarModal('Criar Novo Banner', `
+                        <form id="form-banner">
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Título</label>
+                                <input type="text" id="banner-titulo" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tipo</label>
+                                <select id="banner-tipo" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="Carrossel">Carrossel</option>
+                                    <option value="Destaque Home">Destaque Home</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
+                                <select id="banner-status" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                                    <option value="ativo">Ativo</option>
+                                    <option value="inativo">Inativo</option>
+                                </select>
+                            </div>
+                        </form>
+                    `, function() {
+                        const titulo = document.getElementById('banner-titulo').value;
+                        const tipo = document.getElementById('banner-tipo').value;
+                        const status = document.getElementById('banner-status').value;
+                        
+                        if (titulo && tipo && status) {
+                            adicionarBanner({
+                                titulo,
+                                tipo,
+                                status,
+                                periodo: "01/01 - 31/12/2024",
+                                prioridade: dadosSistema.banners.length + 1
+                            });
+                            fecharModal();
+                        } else {
+                            mostrarToast('Preencha todos os campos obrigatórios', 'erro');
+                        }
+                    });
+                    break;
+                case 'editar-banner':
+                    const banner = dadosSistema.banners.find(b => b.id == id);
+                    if (!banner) break;
+                    
+                    mostrarModal('Editar Banner', `
+                        <form id="form-banner">
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Título</label>
+                                <input type="text" id="banner-titulo" value="${banner.titulo}" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tipo</label>
+                                <select id="banner-tipo" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                                    <option value="Carrossel" ${banner.tipo === 'Carrossel' ? 'selected' : ''}>Carrossel</option>
+                                    <option value="Destaque Home" ${banner.tipo === 'Destaque Home' ? 'selected' : ''}>Destaque Home</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
+                                <select id="banner-status" class="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                                    <option value="ativo" ${banner.status === 'ativo' ? 'selected' : ''}>Ativo</option>
+                                    <option value="inativo" ${banner.status === 'inativo' ? 'selected' : ''}>Inativo</option>
+                                </select>
+                            </div>
+                        </form>
+                    `, function() {
+                        const titulo = document.getElementById('banner-titulo').value;
+                        const tipo = document.getElementById('banner-tipo').value;
+                        const status = document.getElementById('banner-status').value;
+                        
+                        if (titulo && tipo && status) {
+                            // Atualizar banner
+                            const index = dadosSistema.banners.findIndex(b => b.id == id);
+                            if (index !== -1) {
+                                dadosSistema.banners[index] = { 
+                                    ...dadosSistema.banners[index], 
+                                    titulo, 
+                                    tipo, 
+                                    status 
+                                };
+                                renderizarBanners();
+                                mostrarToast('Banner atualizado com sucesso!', 'sucesso');
+                            }
+                            fecharModal();
+                        } else {
+                            mostrarToast('Preencha todos os campos obrigatórios', 'erro');
+                        }
+                    });
+                    break;
+                case 'excluir-banner':
+                    mostrarModal('Excluir Banner', `
+                        <p>Tem certeza que deseja excluir este banner?</p>
+                        <p class="mt-2 text-sm text-gray-500">Esta ação não pode ser desfeita.</p>
+                    `, function() {
+                        excluirBanner(parseInt(id));
+                        fecharModal();
+                    });
+                    break;
+                
+                // Botões gerais
+                case 'search-btn':
+                    mostrarToast('Abrindo busca...', 'sucesso');
+                    break;
+                case 'notifications-btn':
+                    mostrarToast('Abrindo notificações...', 'sucesso');
+                    break;
+                
+                default:
+                    console.log('Ação não implementada:', acao);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cineplay Unifor - Lista de Espera</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="layout-container">
+            <div class="content-wrapper">
+                <div class="layout-content-container">
+                    <header class="header">
+                        <div class="header-content">
+                            <p class="logo">Cineplay Unifor</p>
+                        </div>
+                    </header>
+                    
+                    <main class="main-content">
+                        <div class="waitlist-section">
+                            <div class="section-header">
+                                <div class="title-section">
+                                    <h1 class="title">Lista de Espera</h1>
+                                    <p class="subtitle">Acompanhe a fila de espera para reserva de salas e cabines.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="waitlist-container">
+                                <table class="waitlist-table">
+                                    <thead class="waitlist-header">
+                                        <tr>
+                                            <th class="waitlist-th">Posição</th>
+                                            <th class="waitlist-th">Aluno</th>
+                                            <th class="waitlist-th">Recurso Desejado</th>
+                                            <th class="waitlist-th">Data de Solicitação</th>
+                                            <th class="waitlist-th">Filme</th>
+                                            <th class="waitlist-th">Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="waitlist-body">
+                                        <!-- As reservas aprovadas serão carregadas dinamicamente via JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/listaespera.js"></script>
+</body>
+</html>

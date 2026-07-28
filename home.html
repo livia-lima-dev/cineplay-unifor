@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cineplay Unifor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Roboto:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,0" rel="stylesheet"/>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+      }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#064EBA",
+              "background-light": "#FFFFFF",
+              "background-dark": "#0f1723",
+              "text-light": "#000000",
+              "text-dark": "#FFFFFF",
+              "placeholder-light": "#6C757D",
+              "placeholder-dark": "#9CA3AF",
+              "card-light": "#F0F2F5",
+              "card-dark": "#1E293B",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"],
+              "body": ["Roboto", "sans-serif"],
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<header class="w-full bg-background-light dark:bg-background-dark shadow-sm">
+<div class="flex items-center justify-between whitespace-nowrap px-6 sm:px-10 lg:px-20 py-4 max-w-7xl mx-auto">
+<div class="flex items-center gap-3 text-primary">
+<div class="size-8">
+<svg fill="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 4l12 8-12 8V4z"></path></svg>
+</div>
+<h2 class="text-text-light dark:text-text-dark text-xl font-black tracking-tight">CINEPLAY UNIFOR</h2>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<button onclick="irParaPerfil()" class="flex items-center gap-2 group">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Avatar do usuário com um padrão abstrato de cores" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAF2juhRAi8qiSvxHfSjzgXoliO6HvSgkKPPoA1QY0AnRlHnfi-sdjK1rbZALJombVWDP-wsPTz27L0xqMH_8cZkzBWwbbNxWKbpdFyzS4-nJ0Z1K35wjWVsEwGctOA4pjezUrzFow4NDjJ-isL0h_9IOB6tbWMT308qBZzlRIyRfMSC6zU8SphSrTViRV4bvathrSuciSILhOWbNQRIANulHWOJvCQWi73QTlsZZMGwws38bgpa1LrSbthuxtKW5Lk2kPjzsA17XU");'></div>
+</button>
+</div>
+<button onclick="irParaAdmin()" class="text-text-light dark:text-text-dark text-base font-bold leading-normal tracking-wide hover:text-primary transition-colors duration-200">
+Admin
+</button>
+</div>
+</div>
+</header>
+<main class="flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col max-w-5xl flex-1 px-4">
+<section class="text-center py-10">
+<h1 class="text-text-light dark:text-text-dark tracking-tight text-3xl font-black leading-tight">O que você quer assistir hoje? Confira o Acervo da Videoteca.</h1>
+<div class="mt-6 max-w-3xl mx-auto">
+<label class="flex flex-col min-w-40 h-14 w-full">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full shadow-sm">
+<div class="text-placeholder-light dark:text-placeholder-dark flex bg-card-light dark:bg-card-dark items-center justify-center pl-4 rounded-l-lg">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-lg text-text-light dark:text-text-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border-none bg-card-light dark:bg-card-dark h-full placeholder:text-placeholder-light dark:placeholder:text-placeholder-dark px-4 pl-2 text-base font-normal font-body leading-normal" placeholder="Busque por título, autor, diretor, gênero ou palavras-chave" value=""/>
+</div>
+</label>
+</div>
+<div class="flex justify-center mt-4">
+<div class="flex flex-1 gap-4 flex-wrap max-w-xl justify-center">
+<button class="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-8 bg-primary text-white text-base font-bold leading-normal tracking-wide grow transition-transform duration-200 hover:scale-105">
+<span class="truncate">Buscar</span>
+</button>
+<button onclick="irParaFiltrosAvancados()" class="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-card-light dark:bg-card-dark text-text-light dark:text-text-dark text-base font-bold leading-normal tracking-wide grow transition-colors hover:bg-primary/20 dark:hover:bg-primary/40">
+<span class="truncate">Filtros Avançados</span>
+</button>
+</div>
+</div>
+</section>
+<section class="py-8">
+<h2 class="text-text-light dark:text-text-dark text-2xl font-bold leading-tight tracking-tight px-4 pb-4">Categorias Rápidas</h2>
+<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 px-4">
+<div class="flex flex-col items-center justify-center gap-2 p-4 bg-card-light dark:bg-card-dark rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md hover:-translate-y-1">
+<span class="material-symbols-outlined text-primary text-4xl">movie</span>
+<span class="text-sm font-bold font-body text-center">Filmes</span>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 p-4 bg-card-light dark:bg-card-dark rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md hover:-translate-y-1">
+<span class="material-symbols-outlined text-primary text-4xl">article</span>
+<span class="text-sm font-bold font-body text-center">Documentários</span>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 p-4 bg-card-light dark:bg-card-dark rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md hover:-translate-y-1">
+<span class="material-symbols-outlined text-primary text-4xl">theaters</span>
+<span class="text-sm font-bold font-body text-center">Curtas</span>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 p-4 bg-card-light dark:bg-card-dark rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md hover:-translate-y-1">
+<span class="material-symbols-outlined text-primary text-4xl">flag</span>
+<span class="text-sm font-bold font-body text-center">Cinema Nacional</span>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 p-4 bg-card-light dark:bg-card-dark rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md hover:-translate-y-1">
+<span class="material-symbols-outlined text-primary text-4xl">school</span>
+<span class="text-sm font-bold font-body text-center">Aulas</span>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 p-4 bg-card-light dark:bg-card-dark rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md hover:-translate-y-1">
+<span class="material-symbols-outlined text-primary text-4xl">history_edu</span>
+<span class="text-sm font-bold font-body text-center">Acervo Histórico</span>
+</div>
+</div>
+</section>
+<section class="py-8">
+<h2 class="text-text-light dark:text-text-dark text-2xl font-bold leading-tight tracking-tight px-4 pb-4">Catálogo da Videoteca</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-4">
+<div onclick="irParaDetalhesObra()" class="group cursor-pointer overflow-hidden rounded-lg bg-card-light dark:bg-card-dark shadow-sm transition-shadow duration-300 hover:shadow-xl">
+<div class="aspect-[2/3] w-full overflow-hidden">
+<img class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" data-alt="Pôster do Filme A, com um design minimalista azul e branco." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2nNPXg1TWApGlWs0shSTgf-rbAz4uYmRb_wu9cUQe9mjMuf21KZ8O_Vz71tFzmCtlJLFVO9ODgqutUvA_wJK7Kupo44i6qEbWSlel-ZYzjUG4_mx7TpsfZZsum9RLbTYOXhKq9gbVW0uL663_GNLelc7YjYaKmNlALaOfs1-nVBS0tftK6OEFQMd8zD-9Fn0LSfdahMfcwxVXF_cNtAOXmljnP79O2bPc2EeKXVyDK1eTtuf3ix94c-lQLdyLMjUiJfnRJf_TsrY"/>
+</div>
+<div class="p-4">
+<h3 class="font-bold text-lg truncate">Título da Obra Um</h3>
+<p class="text-sm text-placeholder-light dark:text-placeholder-dark font-body">Filme • 1h 45min</p>
+</div>
+</div>
+<div onclick="irParaDetalhesObra()" class="group cursor-pointer overflow-hidden rounded-lg bg-card-light dark:bg-card-dark shadow-sm transition-shadow duration-300 hover:shadow-xl">
+<div class="aspect-[2/3] w-full overflow-hidden">
+<img class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" data-alt="Pôster do Documentário B, com fotografia em preto e branco." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmQc2SqM47P_KIDCsXYsJM4jwjoP7NBMXsDwWdsWQK_58vPYwFTw2YpLIaJRqcKUnTGCUR0HJFtLHt1EULPkjQ_cQFS10SVtoHQgxPJGRrr_XThK0x_qHzw6sjjE_dtashvj2MYiVVLZV4wHU1PAkYnj1L7zX7Mr8i8LEoHIz37BrU_ROJG-AMSXb4E-BfMmd130hJOGh-65hwWfjk6gTqsGWE3TSehVhC7M3wDeIEpO6wpxvEKtSF3M7hxxyVL35lIE6awPUrqc8"/>
+</div>
+<div class="p-4">
+<h3 class="font-bold text-lg truncate">Título do Documentário Dois</h3>
+<p class="text-sm text-placeholder-light dark:text-placeholder-dark font-body">Documentário • 58min</p>
+</div>
+</div>
+<div onclick="irParaDetalhesObra()" class="group cursor-pointer overflow-hidden rounded-lg bg-card-light dark:bg-card-dark shadow-sm transition-shadow duration-300 hover:shadow-xl">
+<div class="aspect-[2/3] w-full overflow-hidden">
+<img class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" data-alt="Pôster do Curta C, com cores cinza e texto branco." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC26Q6iC6rA5oxW4ooL3tlpjNtUSOraw09eNlSHYsemKXCMxxN1BFj65x7gl7d997pSpjHI4bEQKeJQOngfZRBApZpVG_kMkcFEQ2OUsCueqjfS8mDl63U0ciCsUro9_SsWhjihEPYyWvKwOeeM5JD7mN-gqpIHO1NOS-1MBJuHVXWERSB5CNJI1t0SnaFRYLvIuDDo0Z8H4Xqnu5_kanoh3uNcA8yR1mrmQhtMYG6Be_qpDt7nU0pY32vI7hIJ0WV2X96AqA-Gdm0"/>
+</div>
+<div class="p-4">
+<h3 class="font-bold text-lg truncate">Título do Curta Três</h3>
+<p class="text-sm text-placeholder-light dark:text-placeholder-dark font-body">Curta-metragem • 15min</p>
+</div>
+</div>
+<div onclick="irParaDetalhesObra()" class="group cursor-pointer overflow-hidden rounded-lg bg-card-light dark:bg-card-dark shadow-sm transition-shadow duration-300 hover:shadow-xl">
+<div class="aspect-[2/3] w-full overflow-hidden">
+<img class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" data-alt="Pôster da Aula D, com fundo claro e texto escuro." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdDJlFT9xoUob5z9KXFXnpM2u55Kpa3g7-BBCgabqWWWE4VdR97z1UpIidi6GNoLhuHsz97YG0d6-wkj3RlU_Wn5KDlMgncLSEg0eH_WQ5IqtrkVSzH6eFKOsaURD6298dsA5WND56A7ZKNoJAKetSzlC9pvfx2uYJxp8qEsll1OxFHir7joqzd0TOitXY8d-OqolaIG9uVkeKrECaTxoa8uYvieCTuc30XhY3F0DMXjs4KoJPvUOWufDgthcj7G5qFDeEuKouWo8"/>
+</div>
+<div class="p-4">
+<h3 class="font-bold text-lg truncate">Título da Aula Quatro</h3>
+<p class="text-sm text-placeholder-light dark:text-placeholder-dark font-body">Aula Magna • 2h 10min</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</div>
+
+<script>
+function irParaPerfil() {
+    window.location.href = 'perfilconf.html';
+}
+
+function irParaFiltrosAvancados() {
+    window.location.href = 'filtrosavancados.html';
+}
+
+function irParaDetalhesObra() {
+    window.location.href = 'detalhesobra.html';
+}
+
+function irParaAdmin() {
+    window.location.href = 'dashboard.html';
+}
+</script>
+</body></html>

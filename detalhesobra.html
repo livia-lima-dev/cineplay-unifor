@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cineplay Unifor - Detalhes da Obra</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#064EBA",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#0f1723",
+                        "status-green": "#198754",
+                        "status-red": "#DC3545",
+                        "status-yellow": "#FFC107",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-black dark:text-white">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<header class="sticky top-0 z-50 flex items-center justify-center whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 bg-white dark:bg-gray-900 shadow-sm">
+<div class="flex items-center justify-between w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-3">
+<div class="flex items-center gap-4 text-black dark:text-white">
+<div class="size-8 text-primary">
+<svg fill="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M6.455 19L2 22.5V4a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H6.455zM4 18.385L5.763 17H20V5H4v13.385zM8 15h8v-2H8v2zm0-4h8V9H8v2zm0-4h8V5H8v2z"></path>
+</svg>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">CINEPLAY UNIFOR</h2>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<div class="relative">
+<button class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User avatar image" id="user-menu-button" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAQosiQEIpYmzFmR5W65AEOtfz-hClK9WaK9FfRQSTaSr3gTaCB6sWRWMA7TIudHYQqEWQHsW9hgE_svi2mFl0HTYIuf9DP5O4F3o4pgc-vc-cRK8O0uuNdwlD6C7LLbvrzH_tLP6D2nmrTRXNi0PHGnTYZz2LuNk44cc2ZC-jKdyOhib2rZLTaKmh7KKoml2mq_cidWGDTWmFwgHaw2so_B1CoFyBj3cdtsLSdlFvfqn0G93V8Vgk8_cyg80X13DqpYaEIMM0JDPw");'></button>
+</div>
+</div>
+</div>
+</header>
+<main class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
+<!-- Left Column -->
+<div class="lg:col-span-1 flex flex-col gap-6">
+<div class="w-full bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden rounded-lg min-h-[450px] shadow-md" data-alt="Movie poster for 'A Origem'" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBGOOtY2OjNC1FVhc9BZwwxTnTwgBo0llyhR5h4Icr1iPkZHWTBbqwl_kviwHT1820LrU_zhGv87-DeCUrz5AkTk_jPLvxBeFFSTQhJwatZ44tuH5JhJUa0E39c7h-QeN0G5F8_ccJ8IRS7kAj0DuG6VYhg2VYQArVdx1veqYxEw6XUh1hE6scoalw-yu2Hlu1JLD2wJVa0UgatZjbbP-x_Nxt7NWNYAiZf7q1GHzMfIGlpjKgmlMJouB4Fkd4denK07TNRUCmFIHw");'></div>
+<div class="flex flex-col gap-3">
+<button 
+    class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] w-full transition-colors hover:bg-primary/90"
+    onclick="selectMedia()">
+    <span class="material-symbols-outlined mr-2">play_arrow</span>
+    <span class="truncate">Assistir agora</span>
+</button>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-transparent text-primary border-2 border-primary text-base font-bold leading-normal tracking-[0.015em] w-full transition-colors hover:bg-primary/10">
+<span class="material-symbols-outlined mr-2">add</span>
+<span class="truncate">Adicionar à lista</span>
+</button>
+</div>
+</div>
+<!-- Right Column -->
+<div class="lg:col-span-2 flex flex-col gap-6">
+<!-- Core Info Card -->
+<div class="bg-white dark:bg-slate-800 p-6 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
+<p class="text-black dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">A Origem</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-normal leading-normal pt-2 pb-4">Filme • 2h 28m • 2010 • Português/Inglês • 14+ • Ficção Científica, Ação, Aventura</p>
+<div class="border-t border-slate-200 dark:border-slate-700 pt-4">
+<p class="text-sm text-slate-600 dark:text-slate-300"><strong class="font-semibold text-black dark:text-white">Diretor:</strong> Christopher Nolan</p>
+<p class="text-sm text-slate-600 dark:text-slate-300 mt-1"><strong class="font-semibold text-black dark:text-white">Palavras-chave:</strong> Sonhos, Subconsciente, Espionagem, Realidade</p>
+</div>
+</div>
+<!-- Synopsis Card -->
+<div class="bg-white dark:bg-slate-800 p-6 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
+<h3 class="text-xl font-bold mb-3 text-black dark:text-white">Sinopse</h3>
+<p class="text-slate-600 dark:text-slate-300 leading-relaxed">Dom Cobb é um ladrão habilidoso, o melhor na perigosa arte da extração, o roubo de segredos valiosos das profundezas do subconsciente durante o estado de sonho, quando a mente está mais vulnerável. A rara habilidade de Cobb o tornou um jogador cobiçado neste traiçoeiro novo mundo da espionagem corporativa, mas também o tornou um fugitivo internacional e custou-lhe tudo o que ele já amou.</p>
+</div>
+<!-- Cast Card -->
+<div class="bg-white dark:bg-slate-800 p-6 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
+<h3 class="text-xl font-bold mb-3 text-black dark:text-white">Elenco / Participantes</h3>
+<ul class="list-disc list-inside text-slate-600 dark:text-slate-300 space-y-1">
+<li>Leonardo DiCaprio</li>
+<li>Joseph Gordon-Levitt</li>
+<li>Elliot Page</li>
+<li>Tom Hardy</li>
+<li>Ken Watanabe</li>
+</ul>
+</div>
+<!-- Availability Card -->
+<div class="bg-white dark:bg-slate-800 p-6 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
+<h3 class="text-xl font-bold mb-4 text-black dark:text-white">Exemplares e Localização</h3>
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<p class="text-slate-600 dark:text-slate-300">Quantidade Total / Disponível:</p>
+<p class="font-semibold text-black dark:text-white">5 / 2</p>
+</div>
+<div class="flex items-center justify-between">
+<p class="text-slate-600 dark:text-slate-300">Localização:</p>
+<p class="font-semibold text-black dark:text-white">Biblioteca Central, Seção de Mídia, Prateleira 7B</p>
+</div>
+<div class="flex items-center justify-between">
+<p class="text-slate-600 dark:text-slate-300">Status:</p>
+<div class="flex items-center gap-2">
+<span class="px-2 py-1 text-xs font-bold text-white rounded-full bg-status-green">Disponível</span>
+<span class="px-2 py-1 text-xs font-bold text-white rounded-full bg-status-red">Indisponível</span>
+<span class="px-2 py-1 text-xs font-bold text-black rounded-full bg-status-yellow">Reservado</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Technical Info Accordion -->
+<details class="bg-white dark:bg-slate-800 p-6 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm group">
+<summary class="flex items-center justify-between cursor-pointer list-none">
+<h3 class="text-xl font-bold text-black dark:text-white">Informações Técnicas</h3>
+<span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180">expand_more</span>
+</summary>
+<div class="mt-4 border-t border-slate-200 dark:border-slate-700 pt-4 text-slate-600 dark:text-slate-300 space-y-2 text-sm">
+<p><strong class="font-semibold text-black dark:text-white">Duração Detalhada:</strong> 148 minutos</p>
+<p><strong class="font-semibold text-black dark:text-white">Formato:</strong> Blu-ray, Streaming Digital (1080p)</p>
+<p><strong class="font-semibold text-black dark:text-white">Edição:</strong> Edição Especial de 10º Aniversário</p>
+<p><strong class="font-semibold text-black dark:text-white">Instituição:</strong> Warner Bros. Pictures / Legendary Pictures</p>
+<p><strong class="font-semibold text-black dark:text-white">Direitos Autorais:</strong> © 2010 Warner Bros. Entertainment Inc. Todos os direitos reservados.</p>
+<p><strong class="font-semibold text-black dark:text-white">Tipo de Arquivo:</strong> Físico (Disco Blu-ray), Digital (MP4)</p>
+</div>
+</details>
+</div>
+</div>
+<!-- Related Works Carousel -->
+<div class="mt-12 lg:mt-16">
+<h2 class="text-2xl font-bold mb-6 text-black dark:text-white">Obras Relacionadas</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+<div class="group flex flex-col gap-2 cursor-pointer">
+<div class="aspect-[2/3] w-full bg-center bg-no-repeat bg-cover rounded-lg overflow-hidden shadow-md transition-transform group-hover:scale-105" data-alt="Poster do filme Interestelar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBVqydPc8-rwArc5_tyU6_WEgGVlmMxkCPDhd5TPoghVS6zz9dFDa7Pyww3pN4EkbxgB-vVThzIlxvEBdYGI4sBJUS9DioR9ojgWqZEv_rjbIkSi_-OMPjMDlOXO0qiPm4yHAwXqgTU1lSCwEQRPto-pLxWAkWVx9x8dAN7aRksshWBerEoBuktLTU79M2rbffHSweb_l1wMEYUodvp39-ftcKEwLovEbO68FHZ1AWeyYO7KHilw86ZjcvLm1OBYn2NVIylG-7orec");'></div>
+<div class="flex flex-col">
+<h4 class="font-bold truncate text-black dark:text-white">Interestelar</h4>
+<p class="text-sm text-slate-500 dark:text-slate-400">Filme</p>
+<a class="text-sm font-semibold text-primary mt-1 opacity-0 group-hover:opacity-100 transition-opacity" href="#">Ver detalhes</a>
+</div>
+</div>
+<div class="group flex flex-col gap-2 cursor-pointer">
+<div class="aspect-[2/3] w-full bg-center bg-no-repeat bg-cover rounded-lg overflow-hidden shadow-md transition-transform group-hover:scale-105" data-alt="Poster do filme O Cavaleiro das Trevas" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDBeIb-nnQrwSAuCaIeJU9Do7swbrFokX3FOIHUriZpjdZt9UpWCivHr1U53ZsyIVXLvujZHA4CUlgtmQSyAXgSHK3RWV8TCZLFL_hGSEdKfqw6KbUE9LhW0giN9bMXoKlAr53boHGs3QVc-4OJ6dM5Ev-s0MXxAqY_ScxuZKWO_w4mbtYFXdF80NEOAqK9Vjdc1PLeJCquLXIV6aPQ-wzNqVxATijHtUkW3VAt0Kyw8JlQ9b3X3YpHkfqLIgLrAq875NaO4QcdYhA");'></div>
+<div class="flex flex-col">
+<h4 class="font-bold truncate text-black dark:text-white">O Cavaleiro das Trevas</h4>
+<p class="text-sm text-slate-500 dark:text-slate-400">Filme</p>
+<a class="text-sm font-semibold text-primary mt-1 opacity-0 group-hover:opacity-100 transition-opacity" href="#">Ver detalhes</a>
+</div>
+</div>
+<div class="group flex flex-col gap-2 cursor-pointer">
+<div class="aspect-[2/3] w-full bg-center bg-no-repeat bg-cover rounded-lg overflow-hidden shadow-md transition-transform group-hover:scale-105" data-alt="Poster do filme Amnésia" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA0rXbBL95RohszRhUndoGS-r1VPDS7XIf6tOQ4TVyHayx4BHnjYFdbc-7l9EK6q3n_wpNWQNIo2JwsFINd_72KCz2-56QlMFY-XC5vClJsy5DgLV2uETM71vljHAQZZzAEhnzg9dNMvUOCDHJRHlC9tgFLSDBv7eqoqluXuXnmV8h9M26H_MwNMFWIwkEZFRf53bNNJlQckL1CkbVbJ2JMAoiTJ5WEUCTYYfD5A3V8oXPxMkHzpa27SAN6MZ1UsUjM7yIVWj_yI5U");'></div>
+<div class="flex flex-col">
+<h4 class="font-bold truncate text-black dark:text-white">Amnésia</h4>
+<p class="text-sm text-slate-500 dark:text-slate-400">Filme</p>
+<a class="text-sm font-semibold text-primary mt-1 opacity-0 group-hover:opacity-100 transition-opacity" href="#">Ver detalhes</a>
+</div>
+</div>
+<div class="group flex flex-col gap-2 cursor-pointer">
+<div class="aspect-[2/3] w-full bg-center bg-no-repeat bg-cover rounded-lg overflow-hidden shadow-md transition-transform group-hover:scale-105" data-alt="Poster do filme O Grande Truque" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCwuth_-dXsWsq09cNue0AOJQnaux67Dd3q8cxeWb6w8vk5N3vhbcN3Q_e7w8nzV2ajDU7S_irhSN5uSlparSczbLlg41fjwpQTSUN081_vI3cr6Kjv1mWMHQ8TVwbbU3jPITsBGL7evdTY7o-TjHGkcUvwJIjApR5alviKTrEmCC3H1C4KGvMJ_nnyq_ti1RFy3fQuh3OoExfMnvoRFu_qhmYjpBs2TxfMYuKC_2WR4rq8t2qc2eyntV18yFCqAq-NrbRzHOr5nPk");'></div>
+<div class="flex flex-col">
+<h4 class="font-bold truncate text-black dark:text-white">O Grande Truque</h4>
+<p class="text-sm text-slate-500 dark:text-slate-400">Filme</p>
+<a class="text-sm font-semibold text-primary mt-1 opacity-0 group-hover:opacity-100 transition-opacity" href="#">Ver detalhes</a>
+</div>
+</div>
+<div class="group flex flex-col gap-2 cursor-pointer">
+<div class="aspect-[2/3] w-full bg-center bg-no-repeat bg-cover rounded-lg overflow-hidden shadow-md transition-transform group-hover:scale-105" data-alt="Poster do filme Dunkirk" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA_zMInH6ht5gn7Q8V4B8hM40PzECMS7zSRjWZ9mTJOxo3WcFAcv57W5cPuRmfgyCJaTXWqUMtYx5vIxX7YnHTNkYwLktprz60Hhly_rzEtrI-o2T-5LyUCWnk01_gFh8WixZpt2pG-_wQi6gItS1kH0ZteVBMQFKNaV71Co4XQFIO6gfvdpmHXSVtfN29W_KBw01s6sgkotVlQZ4CmICkd27uV17fn9GAFCtTokCp6QMncztiw2KTXvLTn69T_IDtoeRtEYDE_bTE");'></div>
+<div class="flex flex-col">
+<h4 class="font-bold truncate text-black dark:text-white">Dunkirk</h4>
+<p class="text-sm text-slate-500 dark:text-slate-400">Filme</p>
+<a class="text-sm font-semibold text-primary mt-1 opacity-0 group-hover:opacity-100 transition-opacity" href="#">Ver detalhes</a>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+<script>
+// Função para selecionar a mídia e navegar para a tela de reserva
+function selectMedia() {
+    // Salvar dados da mídia selecionada no storage
+    const mediaData = {
+        selectedMedia: "A Origem",
+        selectedMediaId: "obra_001",
+        mediaType: "filme",
+        duration: "148 minutos",
+        director: "Christopher Nolan"
+    };
+    
+    // Usar localStorage diretamente para compatibilidade
+    try {
+        const currentData = JSON.parse(localStorage.getItem('cineplay_reservation') || '{}');
+        const updatedData = { 
+            ...currentData, 
+            ...mediaData,
+            timestamp: new Date().toISOString()
+        };
+        localStorage.setItem('cineplay_reservation', JSON.stringify(updatedData));
+        
+        // Navegar para a tela de reserva de data
+        window.location.href = 'dia.html';
+    } catch (error) {
+        console.error('Erro ao salvar dados da mídia:', error);
+        // Fallback: navegar mesmo com erro
+        window.location.href = 'dia.html';
+    }
+}
+
+// Verificar se há dados de reserva ao carregar a página
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        const reservationData = JSON.parse(localStorage.getItem('cineplay_reservation') || '{}');
+        if (reservationData.selectedMedia) {
+            console.log('Mídia já selecionada:', reservationData.selectedMedia);
+        }
+    } catch (error) {
+        console.error('Erro ao carregar dados da reserva:', error);
+    }
+});
+</script>
+</body></html>
