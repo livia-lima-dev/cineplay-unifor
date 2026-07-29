@@ -121,9 +121,7 @@ em qualquer navegador moderno.
 
 ## 📄 Documentação
 
-A documentação completa de requisitos do projeto está disponível neste repositório.
-
-Ela contempla:
+A documentação completa de requisitos do projeto contempla:
 
 - Requisitos funcionais
 - Requisitos não funcionais
@@ -132,6 +130,9 @@ Ela contempla:
 - Stakeholders
 - Benchmarking
 - Premissas e restrições
+- Atas de reunião
+- Diagrama de atividades
+- Relatório de viabilidade
 
 ---
 
